@@ -13,8 +13,8 @@ module.exports.getHomeList = function (req, res) {
         if (result.length == 0) {
             res.status(400).send('No Home Found!')
         }
-        else {
-            console.log('response', result);
+        else{
+         //   console.log('response',result);
             res.status(200).send(result);
         }
 
@@ -27,8 +27,8 @@ module.exports.getOrganisationDetails = function (req, res) {
         if (result.length == 0) {
             res.status(400).send('No Organisation Found!')
         }
-        else {
-            console.log('response', result);
+        else{
+       //     console.log('response',result);
             res.status(200).send(result);
         }
 
@@ -40,13 +40,24 @@ module.exports.editTrainingStandards = function (req, res) {
         if (result.length == 0) {
             res.status(400).send('No Organisation Found!')
         }
-        else {
-            console.log('response', result);
+        else{
+         //   console.log('response',result);
             res.status(200).send(result);
         }
-
-    });
+        
+      });
 }
-
+module.exports.editOrgDetails = function(req,res){
+    console.log(req.body)
+    con.editOrgDetails(req.body,function(result){
+        if(result.length==0){
+            res.status(400).send('No Organisation Found!')
+        }
+        else{
+            res.status(200).send(result);
+        }
+        
+      });
+}
 
 

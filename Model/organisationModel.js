@@ -18,7 +18,7 @@ module.exports = {
 
                     }
                     else {
-                       console.log("homes list",result)
+                    //   console.log("homes list",result)
                         return retFunc(result)
 
                     }
@@ -39,7 +39,7 @@ module.exports = {
                     }
 
                     else {
-                        console.log("org details",result)
+                    //    console.log("org details",result)
                         return retFunc(result)
                     }
                 })
@@ -61,14 +61,48 @@ module.exports = {
                     "train_standards": trainingObj.trainStandards
                 }
             }
-            console.log(trainingObj)
+           // console.log(trainingObj)
             myDatabase.collection('organisation').update(query, update, function(err, result) {
                 if (err) {
                     return retFunc(1)
                 }
 
                 else {
-                    console.log("org details",result)
+                 //   console.log("org details",result)
+                    return retFunc(result)
+                }
+            })
+            
+            }
+        })
+    },
+    editOrgDetails(orgDetailObj, retFunc){
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+
+                console.log("to see details",orgDetailObj.homeDetails)
+                var query = { 
+                "org_id": orgDetailObj.homeDetails.org_id
+            },
+            update = { 
+                "$set": {
+                    "org_name": orgDetailObj.homeDetails.org_name,
+                    "contact_firstName":orgDetailObj.homeDetails.contact_firstName,
+                    "contact_lastName":orgDetailObj.homeDetails.contact_lastName,
+                    "phone_no":orgDetailObj.homeDetails.phone_no,
+                    "email_id":orgDetailObj.homeDetails.email_id
+                }
+            }
+            //console.log(trainingObj)
+            myDatabase.collection('organisation').update(query, update, function(err, result) {
+                if (err) {
+                    return retFunc(1)
+                }
+
+                else {
+                    console.log("org details here",result)
                     return retFunc(result)
                 }
             })
@@ -76,89 +110,9 @@ module.exports = {
             }
         })
     }
+   // editHomeDetails
 
-    // //inserting appointment details
-    // async addAppointmentIntoCollection(colName, theObject, retFunc) {
-
-    //     mongoClient.connect(db_url, function (err, dbServer) {
-    //         if (err) throw err;
-    //         else {
-    //             var myDatabase = dbServer.db(db_name);
-    //             myDatabase.collection(colName).insertOne(theObject, function (err, result) {
-    //                 if (err) {
-    //                     return retFunc(1)
-
-    //                 }
-    //                 else {
-    //                     return retFunc(result)
-    //                 }
-    //             })
-    //         }
-    //     })
-    // },
-
-    // // update appointment of user
-    // async updateAppointmentIntoCollection(colName, updateQuery, updateClause, retFunc) {
-
-    //     mongoClient.connect(db_url, function (err, dbServer) {
-    //         if (err)
-    //             throw err;
-    //         else {
-    //             var myDatabase = dbServer.db(db_name);
-    //             myDatabase.collection(colName).updateOne(updateQuery, updateClause, function (er, result) {
-    //                 if (err)
-    //                     retFunc(1);
-    //                 else {
-    //                     return retFunc(result)
-    //                 }
-    //             })
-    //         }
-    //     })
-    // },
-
-    // // cancel an appointment 
-    // async deleteAppointmentFromCollection(colName, delQuery, retFunc) {
-
-    //     mongoClient.connect(db_url, function (err, dbServer) {
-    //         if (err)
-    //             throw err;
-    //         else {
-
-    //             var myDatabase = dbServer.db(db_name);
-    //             myDatabase.collection(colName).deleteOne({ email: delQuery }, function (err, result) {
-    //                 if (err)
-    //                     return retFunc(1);
-    //                 else {
-    //                     return retFunc(result);
-    //                 }
-    //             });
-    //         }
-    //     })
-    // },
-
-    // // check if doctor is available at particular time
-    // async checkDoctorAvailability(colName, theObject, retFunc) {
-
-    //     mongoClient.connect(db_url, function (err, dbServer) {
-    //         if (err)
-    //             throw err;
-    //         else {
-    //             console.log(theObject)
-
-    //             var myDatabase = dbServer.db(db_name);
-    //             myDatabase.collection(colName).find({ doctorName: theObject.doctorName }, function (err, result) {
-    //                 if (err)
-    //                     return retFunc(1);
-    //                 else {
-    //                     return retFunc(result);
-    //                 }
-    //             });
-    //         }
-    //     })
-
-
-    // }
-
+    
 }
 
 
