@@ -1,5 +1,5 @@
 const express = require('express');
-const userRouter = require('./Routes/userRouter');
+const landingRouter = require('./Routes/landingRouter');
 const cors = require('cors');
 var bodyParser = require('body-parser')
 const organisationRouter = require('./Routes/orgnizationRouter')
@@ -24,7 +24,7 @@ app.use(cors(corsOptions));
 
 
 //routers
-app.use("/", userRouter);
+app.use("/", landingRouter);
 app.use("/orgnization/", organisationRouter);
 
 
