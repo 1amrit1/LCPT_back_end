@@ -37,8 +37,8 @@ module.exports.get_1_course = async function (courseID) {
 module.exports.get_all_courses = async function () {
     var res;
     await client.connect();
-    res = await client.db(db_name).collection("course").find({});
-    console.log(res);
+    res = await client.db(db_name).collection("course").find({}).toArray();
+    // console.log(res);
     client.close();
     return res;
 
