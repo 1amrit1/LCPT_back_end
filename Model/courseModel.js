@@ -9,15 +9,19 @@ const client = new MongoClient(url);
 // 
 //COURSE => (COURSE_ID, TITLE, DESCRIPTION, TRAINING_DURATION, VALIDITY_DURATION,)
 
-
+client.connect();
 
 module.exports.insert_1_course = async function (courseObj) {
-    var res;
+    var res = {};
     // var courseObj = { "courseID": courseID, "title": title, "description": description, "training_duration": training_duration, "validity_duration": validity_duration };
+    try {
 
-    await client.connect();
-    res = await client.db(db_name).collection("course").insertOne(courseObj);
-    client.close();
+        // await client.connect();
+        res = await client.db(db_name).collection("course").insertOne(courseObj);
+        // client.close();
+    } catch (err) {
+        console.log(err)
+    }
 
     console.log(res);
     return res;
@@ -25,21 +29,32 @@ module.exports.insert_1_course = async function (courseObj) {
 }
 
 module.exports.get_1_course = async function (courseID) {
-    var res;
-    await client.connect();
-    res = await client.db(db_name).collection("course").find({ "courseID": courseID });
-    console.log(res);
-    client.close();
+    var res = {};
+    try {
+
+        // await client.connect();
+        res = await client.db(db_name).collection("course").find({ "courseID": courseID });
+        console.log(res);
+        // client.close();
+    }
+    catch (err) {
+        console.log(err);
+    }
     return res;
 
 }
 
 module.exports.get_all_courses = async function () {
-    var res;
-    await client.connect();
-    res = await client.db(db_name).collection("course").find({}).toArray();
-    // console.log(res);
-    client.close();
+    var res = [];
+    try {
+
+        // await client.connect();
+        res = await client.db(db_name).collection("course").find({}).toArray();
+        // console.log(res);
+        // client.close();
+    } catch (err) {
+        console.log(err);
+    }
     return res;
 
 }
@@ -48,7 +63,7 @@ module.exports.update_1_course = async function (courseID, updateObj) {
     var res;
     console.log("in get all users");
     await client.connect();
-    res = await client.db(db_name).collection("course").update({ "courseID": courseID }, updateObj);
+    res = await client.db(db_name).collection("course").updateOne({ "courseID": courseID }, updateObj);
     console.log(res);
     client.close();
     return res;
