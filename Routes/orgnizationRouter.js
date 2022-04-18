@@ -2,19 +2,31 @@ const { check, body, validationResult } = require('express-validator');
 const path = require('path');
 var con = require('./../Model/organisationModel')
 const express = require('express');
-var { getHomeList, getOrganisationDetails, editTrainingStandards, editOrgDetails } = require('../Controller/organisationController')
+var { getHomeList, getOrganisationDetails, editTrainingStandards, editOrgDetails, addNewStandard, getStaffList,
+    getHomeDetails, editHomeDetails, editStaffStatus, addNewStaff } = require('../Controller/organisationController')
 var organizationRouter = express.Router();
 
 
 //get list of all homes in organisation
 organizationRouter.get('/getHomesList/:id', getHomeList);
 
-organizationRouter.get('/getOrganisationDetails/:id', getOrganisationDetails)
+organizationRouter.get('/getOrganisationDetails/:id', getOrganisationDetails);
 
-organizationRouter.put('/editTrainingStandards', editTrainingStandards)
+organizationRouter.get('/getHomeDetails/:id', getHomeDetails);
 
-organizationRouter.put('/editOrgDetails', editOrgDetails)
+organizationRouter.put('/editTrainingStandards', editTrainingStandards);
 
+organizationRouter.put('/editOrgDetails', editOrgDetails);
+
+organizationRouter.put('/editHomeDetails', editHomeDetails);
+
+//organizationRouter.delete('/editTrainingStandards', editTrainingStandards);
+organizationRouter.get('/getStaffList/:id', getStaffList);
+organizationRouter.post('/addNewStaff', addNewStaff);
+
+
+organizationRouter.post('/addNewStandard', addNewStandard);
+organizationRouter.put('/editStaffStatus', editStaffStatus);
 
 
 module.exports = organizationRouter;
