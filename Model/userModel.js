@@ -1,8 +1,7 @@
 const mongoClient = require('mongodb').MongoClient;
 const db_name = "LCPT";
 const url = "mongodb+srv://hanishdb:Hanish8013@cluster0.381hf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-const client = new MongoClient(url);
-
+const client = new mongoClient(url);
 
 
 module.exports.insert_1_user = async function (userID, name, dob, address, email, org_id, role_id, share_emp_status) {
