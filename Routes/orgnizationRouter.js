@@ -3,7 +3,7 @@ const path = require('path');
 var con = require('./../Model/organisationModel')
 const express = require('express');
 var { getHomeList, getOrganisationDetails, editTrainingStandards, editOrgDetails, addNewStandard, getStaffList,
-    getHomeDetails, editHomeDetails, editStaffStatus, addNewStaff } = require('../Controller/organisationController')
+    getHomeDetails, editHomeDetails, editStaffStatus, addNewStaff, getRolesFromHomeId } = require('../Controller/organisationController')
 var organizationRouter = express.Router();
 
 
@@ -27,6 +27,11 @@ organizationRouter.post('/addNewStaff', addNewStaff);
 
 organizationRouter.post('/addNewStandard', addNewStandard);
 organizationRouter.put('/editStaffStatus', editStaffStatus);
+
+
+organizationRouter.get('/getRoleByHomeId/:id', getRolesFromHomeId);
+
+
 
 
 module.exports = organizationRouter;

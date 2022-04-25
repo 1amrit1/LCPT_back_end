@@ -11,6 +11,10 @@ const UserSchema  = new mongoose.Schema({
     city: String,
     state: String,
     postalCode: String,
+    empStatus:String,
+    orgId:Number,
+    homeId:Number,
+    roleId:Number,
 })
 
 const User = mongoose.model('users', UserSchema)

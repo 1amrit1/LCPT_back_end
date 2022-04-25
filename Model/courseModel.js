@@ -70,6 +70,37 @@ module.exports.update_1_course = async function (courseID, updateObj) {
 
 }
 
+module.exports.getUserCourseDetails = async function (homeId, roleId, userId) {
+    mongoClient.connect(db_url, function (err, dbServer) {
+        if (err) throw err;
+        else {
+            var myDatabase = dbServer.db(db_name);
+            myDatabase.collection('home_crs_role').find({ home_id: homeId, role_id: roleId  }).toArray(function (err, result) {
+                if (err) {
+                    return err
+                }
+
+                else {
+                    //  console.log("home details",result)
+                    return result
+                }
+            })
+        }
+    })
+
+}
+
+module.exports.getUserCompletedCourses = async function (userId, roleId, homeId) {
+    var res;
+    console.log("In course -> getUserCompletedCourses");
+    await client.connect();
+    res = await client.db(db_name).collection("user_crs_mapping").find({ 'user_id': userId, 'role_id': roleId, 'home_id': homeId  });
+    console.log("Response user completed course ", res);
+    client.close();
+    return res;
+
+}
+
 // in delete course, it will be verified in some way that the course is being removed from course and all its mapping table
 // module.exports.delete_1_course = async function (courseID) {
 //     var res;
