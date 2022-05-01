@@ -1,9 +1,6 @@
 const mongoClient = require('mongodb').MongoClient;
 const db_url = "mongodb+srv://hanishdb:Hanish8013@cluster0.381hf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-//const url = "mongodb+srv://admin:qwerty123@cluster0.h7iox.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const db_name = "LCPT";
-
-const { ObjectId } = require("mongodb");
 module.exports = {
 
     getHomesList(id, retFunc) {
@@ -14,12 +11,10 @@ module.exports = {
                 myDatabase.collection('home').find({ 'org_id': id }).toArray(function (err, result) {
                     if (err) {
                         return retFunc(1)
-
                     }
                     else {
-                        //   console.log("homes list",result)
+                        console.log("===Home list === ",result);
                         return retFunc(result)
-
                     }
                 })
             }
@@ -278,6 +273,43 @@ module.exports = {
                     }
                 })
 
+            }
+        })
+    },
+
+    getAllHomesList(id, retFunc) {
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+                myDatabase.collection('home').find({}).toArray(function (err, result) {
+                    if (err) {
+                        return retFunc(1);
+                    }
+                    else {
+                        console.log("=== All Home list === ",result);
+                        return retFunc(result);
+                    }
+                })
+            }
+        })
+    },
+
+    getHome_Crs_Role_Json(id, retFunc) {
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+                myDatabase.collection('home_crs_role').find({'home_id': String(id)}).toArray(function (err, result) {
+                    if (err) {
+                        return retFunc(1)
+                    }
+
+                    else {
+                        //  console.log("home details",result)
+                        return retFunc(result)
+                    }
+                })
             }
         })
     }
