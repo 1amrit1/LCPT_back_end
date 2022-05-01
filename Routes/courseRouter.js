@@ -6,6 +6,6 @@ courseRouter.post('/create-course', addCourseFn);
 courseRouter.get('/view-all-courses', getAllCoursesFn);
 courseRouter.put('/update-course', updateCourseFn);
 
-courseRouter.get('/fetchCourseDetails', getUserBasedCourseDetails);
+courseRouter.post('/fetchCourseDetails', getUserBasedCourseDetails);
 
 module.exports = courseRouter;

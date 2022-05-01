@@ -275,5 +275,42 @@ module.exports = {
 
             }
         })
+    },
+
+    getAllHomesList(id, retFunc) {
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+                myDatabase.collection('home').find({}).toArray(function (err, result) {
+                    if (err) {
+                        return retFunc(1);
+                    }
+                    else {
+                        console.log("=== All Home list === ",result);
+                        return retFunc(result);
+                    }
+                })
+            }
+        })
+    },
+
+    getHome_Crs_Role_Json(id, retFunc) {
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+                myDatabase.collection('home_crs_role').find({'home_id': String(id)}).toArray(function (err, result) {
+                    if (err) {
+                        return retFunc(1)
+                    }
+
+                    else {
+                        //  console.log("home details",result)
+                        return retFunc(result)
+                    }
+                })
+            }
+        })
     }
 }

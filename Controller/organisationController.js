@@ -5,7 +5,7 @@ const { check, body, validationResult } = require('express-validator');
 const path = require('path');
 var con = require('./../Model/organisationModel')
 var roleService = require('./../Service/roleService')
-var courseModel = require('../Model/courseModel');
+var courseModel = require('./../Model/courseModel');
 
 
 
@@ -156,33 +156,75 @@ module.exports.getRolesFromHomeId = function (req, res) {
     });
 }
 
-module.exports.getUserBasedCourseDetails = async function (req, res) {
-    var homeId = req.body.homeId;
-        var roleId = req.body.roleId;
-        var userId = req.body.userId;
-        try{
-   // console.log(id)
-   courseModel.getUserBasedCourseDetails(homeId, roleId, userId, function (result) {
-    if (result.length == 0) {
-        res.status(400).send('No Member Found!')
-    }
-    else{
-        res.status(200).send(result);
-    };
-});
-} catch (err){
-    throw new err;
+/** Added by Ayush */
+module.exports.getAllHomes = function (req, res) {
+    var id = req.params.id;
+    con.getAllHomesList(id, function (result) {
+        if (result.length == 0) {
+            res.status(400).send('No Home Found!')
+        }
+        else{
+            console.log('=== All homes list === ',result);
+            res.status(200).send(result);
+        }
+
+    });
 }
-//    var userCompletedCourses = await getUserCompletedCourses(userId, roleId, homeId);
-//     con.getHomeDetails(id, function (result) {
-//         if (result.length == 0) {
-//             res.status(400).send('No Member Found!')
-//         }
-//         else{
-//             res.status(200).send(result);
-//         }
 
-//     });
+/** Added by Ayush */
+module.exports.getHomeDetailsJson = function (req, res) {
+    var id = req.params.id;
+   // console.log(id)
+   var arrayOfHomeCourses = [];
+   var mapOfRoleCourse = new Map();
+   var course  = new Map();
+    con.getHome_Crs_Role_Json(id, function (result) {
+        if (result.length == 0) {
+            res.status(400).send('No Member Found!')
+        }
+        else{
+            var courseMap = new Map();
+            courseModel.getAllCourses(function (crsResult) {
+                if (crsResult.length==0) {
+                    return res.status(400).send('No data Found!')
+                }else{
+                   // console.log(crsResult);
+                    crsResult.forEach(res => {
+                        courseMap.set(String(res.courseID),res);
+                    });
 
 
+                    //console.log("========Map of all courses ===== ", courseMap);
+                   
+                    result.forEach(res => {
+                        mapOfRoleCourse = new Map();
+                        course  = new Map();
+                        res.course_details.forEach(inner => {
+                            var crsObj = courseMap.get(String(inner.id));
+                            //console.log("Got course => ",crsObj);
+                            course[inner.id]=crsObj;
+                            mapOfRoleCourse.set(res.role_id +"~~"+ res.role_name, course);
+                            
+                        });
+                        console.log("+++++++++++++++++++++++++++++++++++++");
+                       console.log("Map = > ",mapOfRoleCourse);
+                       console.log("+++++++++++++++++++++++++++++++++++++");
+                        arrayOfHomeCourses.push(mapOfRoleCourse);
+                      //  console.log("+++++++++++++++++++++++++++++++++++++");
+                      //  console.log("Map = > ",mapOfRoleCourse);
+                      //  console.log("+++++++++++++++++++++++++++++++++++++");
+
+                        
+                    });
+                    console.log("Array to response => ",arrayOfHomeCourses);
+                    return res.status(200).send(arrayOfHomeCourses);
+                }
+            });
+            
+            //console.log("++++ Array to response => ",arrayOfHomeCourses);
+            //res.status(200).send(arrayOfHomeCourses);
+           
+        }
+
+    });
 }
