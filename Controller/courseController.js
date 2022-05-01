@@ -55,9 +55,9 @@ module.exports.updateCourseFn = async function (req, res) {
     }
 
     module.exports.getUserBasedCourseDetails = async function (req, res) {
-    var homeId = req.body.homeId;
+    var homeId = 1;//req.body.homeId;
     var roleId = 4;//req.body.roleId;
-    var userId = req.body.userId;
+    var userId = 2;//req.body.userId;
         var allCourseJson = [];
         var userCourseJson = [];
         var allCourseList = [];
@@ -66,7 +66,7 @@ module.exports.updateCourseFn = async function (req, res) {
                 if (result.length==0) {
                     return res.status(400).send('No data Found!')
                 }
-                else{
+                else{ 
                     console.log("=========== Got response ======= ", result);
                     allCourseJson.push(result);
                     courseModel.getUserCompletedCourses(homeId, roleId, userId, function (result) {
@@ -91,32 +91,33 @@ module.exports.updateCourseFn = async function (req, res) {
                                           var tempArrayOfCompltdCourseIds = [];
                                           var userCourseId = '';
                                           userCourseJson.forEach(upper => {
-                                              //console.log(upper[0]);
-                                              upper[0].courseDetails.forEach(inner => {
-                                                //console.log(inner.id);
-                                                userCourseId = inner.id;
+                                             //console.log('@#@#@# ',upper);
+                                             upper.forEach(inner => {
+                                                console.log(inner.course_id);
+                                                userCourseId = inner.course_id;
                                                 allCourseList.forEach(mid => {
                                                     mid.forEach(lowest => {
                                                     if(userCourseId === lowest.courseID){
+                                                       // console.log('@#@#@# ',lowest);
                                                         tempArrayOfCompltdCourseIds.push(userCourseId);
                                                         var mapOfCoursesCompleted = {};
-                                                        mapOfCoursesCompleted['homeId'] = upper[0].homeId;
-                                                        mapOfCoursesCompleted['roleId'] = upper[0].roleId;
-                                                        mapOfCoursesCompleted['userId'] = upper[0].userId;
-                                                        mapOfCoursesCompleted['roleName'] = upper[0].roleName;
+                                                        mapOfCoursesCompleted['homeId'] = homeId;
+                                                        mapOfCoursesCompleted['roleId'] = roleId;
+                                                        mapOfCoursesCompleted['userId'] = userId;
+                                                        mapOfCoursesCompleted['valid'] = upper.validity_date;
                                                         mapOfCoursesCompleted['crsId'] = lowest.courseID;
                                                         mapOfCoursesCompleted['title'] = lowest.title;
                                                         mapOfCoursesCompleted['trainDuration'] = lowest.training_duration;
                                                         mapOfCoursesCompleted['validity'] = lowest.validity_duration;
-                                                        mapOfCoursesCompleted['extDoc'] = (lowest.external_document === undefined) ? 'N/A' : lowest.external_document;
+                                                        mapOfCoursesCompleted['extDoc'] = (lowest.badging_document_url === undefined) ? 'N/A' : lowest.badging_document_url;
                                                         mapOfCoursesCompleted['sharedEmp'] = (lowest.shared_with_emp === undefined) ? 'No' : lowest.shared_with_emp;;
-                                                        mapOfCoursesCompleted['status'] = (lowest.status === undefined) ? 'Complete' : lowest.status;
+                                                        mapOfCoursesCompleted['status'] = (lowest.status === true) ? 'Complete' : 'Pending';
                                                         arrayOfCourseCompleted.push(mapOfCoursesCompleted);
                                                     }
                                                 });
                                                 });
                                                 
-                                              });
+                                            });
                                         });
                                         console.log("========= Completed courses ==== ", arrayOfCourseCompleted);
                                         console.log("========= Completed courses IDs ==== ", tempArrayOfCompltdCourseIds);
@@ -125,23 +126,22 @@ module.exports.updateCourseFn = async function (req, res) {
                                         var arrayOfPendingCourses = [];
                                         allCourseJson.forEach(upper => {
                                             upper[0].course_details.forEach(mid => {
-                                                if(tempArrayOfCompltdCourseIds.indexOf(mid.crsId) === -1){
-                                                    console.log("Pending Course == > ", mid.crsId)
+                                                if(tempArrayOfCompltdCourseIds.indexOf(mid.id) === -1){
+                                                    console.log("Pending Course == > ", mid.id)
                                                     allCourseList.forEach(inner => {
                                                         inner.forEach(lowest => {
-                                                            if(mid.crsId === lowest.courseID){
+                                                            if(mid.id === lowest.courseID){
                                                                 var mapOfPendingCourses = {};
                                                                 mapOfPendingCourses['homeId'] = upper[0].home_id;
                                                                 mapOfPendingCourses['roleId'] = upper[0].role_id;
                                                                 mapOfPendingCourses['userId'] = userId;
-                                                                mapOfPendingCourses['roleName'] = upper[0].role_name;
                                                                 mapOfPendingCourses['crsId'] = lowest.courseID;
                                                                 mapOfPendingCourses['title'] = lowest.title;
                                                                 mapOfPendingCourses['trainDuration'] = lowest.training_duration;
                                                                 mapOfPendingCourses['validity'] = lowest.validity_duration;
-                                                                mapOfPendingCourses['extDoc'] = (lowest.external_document === undefined) ? 'N/A' : lowest.external_document;
+                                                                mapOfPendingCourses['extDoc'] = (lowest.badging_document_url === undefined) ? 'N/A' : lowest.badging_document_url;
                                                                 mapOfPendingCourses['sharedEmp'] = (lowest.shared_with_emp === undefined) ? 'No' : lowest.shared_with_emp;;
-                                                                mapOfPendingCourses['status'] = (lowest.status === undefined) ? 'Pending' : lowest.status;
+                                                                mapOfPendingCourses['status'] = (lowest.status === true) ? 'Complete' : 'Pending';
                                                                 arrayOfPendingCourses.push(mapOfPendingCourses);
                                                             }
                                                         });
@@ -150,8 +150,6 @@ module.exports.updateCourseFn = async function (req, res) {
                                                 
                                               });
                                           });
-
-
                                           console.log("========= Pending courses ==== ", arrayOfPendingCourses);
                                           let responseJson = {"completedCourses": arrayOfCourseCompleted, "pendingCourses": arrayOfPendingCourses, "allCourseList":allCourseList};
                                           //console.log("======== Final ==== ", responseJson);

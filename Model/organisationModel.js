@@ -295,12 +295,12 @@ module.exports = {
         })
     },
 
-    getHome_Crs_Role_Json(id, retFunc) {
+    getHome_Crs_Role_Json(query, retFunc) {
         mongoClient.connect(db_url, function (err, dbServer) {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
-                myDatabase.collection('home_crs_role').find({'home_id': String(id)}).toArray(function (err, result) {
+                myDatabase.collection('home_crs_role').find(query).toArray(function (err, result) {
                     if (err) {
                         return retFunc(1)
                     }
