@@ -139,32 +139,62 @@ module.exports.addNewStaff = function(req,res){
         }
     })
 }
-
-/** Added by Ayush */
-module.exports.getRolesFromHomeId = function (req, res) {
+module.exports.showHomeCheckList = function(req,res){
     var id = req.params.id;
-    console.log("==== ID ==== ", id);
-    roleService.getAllRolesByHomeId(id, function (result) {
+    con.showHomeCheckList(id,function(result){
+       // console.log("checkList result",result)
+        if(result.length==0){
+            res.status(400).send('No Role Found!')
+        }
+        else{
+            res.status(200).send(result)
+        }
+    })
+}
+module.exports.editRoleStatus = function(req,res){
+    //var id = req.params.id;
+    var editRoleObj = req.body
+    con.editRoleStatus(editRoleObj,function(result){
+        if(result.length==0){
+            res.status(400).send('No Role Found!')
+        }
+        else{
+            res.status(200).send(result)
+        }
+    })
+}
+module.exports.addNewRole = function(req,res){
+    //var id = req.params.id;
+    var newRoleObj = req.body
+    con.addNewRole(newRoleObj,function(result){
+        if(result.length==0){
+            res.status(400).send('Sorry! Something went wrong.')
+        }
+        else{
+            res.status(200).send(result)
+        }
+    })
+}
+module.exports.getRoleTemplateDetails = function(req,res){
+    var home_id = req.params.homeId;
+    var role_id = req.params.roleId;
+    con.getRoleTemplateDetails({"home_id":home_id,"role_id":role_id}, function (result) {
         if (result.length == 0) {
             res.status(400).send('No Role Found!')
         }
         else{
-            console.log("=== Result === ", result);
             res.status(200).send(result);
         }
 
     });
 }
-
-/** Added by Ayush */
-module.exports.getAllHomes = function (req, res) {
-    var id = req.params.id;
-    con.getAllHomesList(id, function (result) {
+module.exports.addNewHome = function(req,res){
+    var homeObj = req.body
+    con.addNewHome(homeObj, function (result) {
         if (result.length == 0) {
-            res.status(400).send('No Home Found!')
+            res.status(400).send('No Role Found!')
         }
         else{
-            console.log('=== All homes list === ',result);
             res.status(200).send(result);
         }
 
@@ -223,8 +253,83 @@ module.exports.getHomeDetailsJson = function (req, res) {
             
             //console.log("++++ Array to response => ",arrayOfHomeCourses);
             //res.status(200).send(arrayOfHomeCourses);
-           
+        }})
+    }
+module.exports.getCourseList = function(req,res){
+   
+    con.getCourseList(function (result) {
+        if (result.length == 0) {
+            res.status(400).send('No Course Found!')
+        }
+        else{
+            res.status(200).send(result);
         }
 
     });
 }
+module.exports.addCheckListRole = function(req,res){
+    var roleObj = req.body
+    con.addCheckListRole(roleObj, function (result) {
+        if (result.length == 0) {
+            res.status(400).send('Sorry Something went wrong!')
+        }
+        else{
+            res.status(200).send(result);
+        }
+
+    });
+}
+module.exports.editCourseDetails =  function(req,res){
+    var roleObj = req.body
+    con.editCourseDetails(roleObj, function (result) {
+        if (result.length == 0) {
+            res.status(400).send('Sorry Something went wrong!')
+        }
+        else{
+            res.status(200).send(result);
+        }
+
+    });
+}
+module.exports.addAssignRoleText = function(req,res){
+    var roleObj = req.body
+    con.addAssignRoleText(roleObj, function (result) {
+        if (result.length == 0) {
+            res.status(400).send('Sorry Something went wrong!')
+        }
+        else{
+            res.status(200).send(result);
+        }
+
+    });
+}
+/** Added by Ayush */
+module.exports.getAllHomes = function (req, res) {
+    var id = req.params.id;
+    con.getAllHomesList(id, function (result) {
+        if (result.length == 0) {
+            res.status(400).send('No Home Found!')
+        }
+        else{
+            console.log('=== All homes list === ',result);
+            res.status(200).send(result);
+        }
+
+    });
+}
+/** Added by Ayush */
+module.exports.getRolesFromHomeId = function (req, res) {
+    var id = req.params.id;
+    console.log("==== ID ==== ", id);
+    roleService.getAllRolesByHomeId(id, function (result) {
+        if (result.length == 0) {
+            res.status(400).send('No Role Found!')
+        }
+        else{
+            console.log("=== Result === ", result);
+            res.status(200).send(result);
+        }
+
+    });
+}
+        
