@@ -39,7 +39,7 @@ var homesComplaintSummary = async (homeID) => {
     for (let i = 0; i < URHbyHome.length; i++) {
         var user_id = URHbyHome[i].user_id;
         var role_id = URHbyHome[i].role_arr[0].role_id;
-        var home_id = URHbyHome[i].homeID;
+        var home_id = URHbyHome[i].home_id;
         var isUserComplaint = await checkUserForComplaintFn(user_id, role_id, home_id);
         if (!isUserComplaint) {
             console.log("false")
@@ -51,6 +51,7 @@ var homesComplaintSummary = async (homeID) => {
 
     }
     console.log(singleHomeCompliant)
+    // if()
     return singleHomeCompliant;
 
 }
@@ -90,3 +91,54 @@ module.exports.sendOganizationSummary = async (req, res) => {
 
 
 }
+var isRoleAlreadyInArrFn = (objArr, role_id) => {
+    for (let i = 0; i < objArr.length; i++) {
+        if (objArr[i].role_id == role_id) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+module.exports.getHomeSummary = async (req, res) => {
+    var homeID = req.params.home_id
+    var URHbyHome = await auditReportModel.getURHMapByHomeID(homeID);
+    var homeSummObjArr = [];
+    var singleHomeCompliant = { "total": URHbyHome.length, "total_Complaint": 0, }
+    for (let i = 0; i < URHbyHome.length; i++) {
+        var user_id = URHbyHome[i].user_id;
+        var role_id = URHbyHome[i].role_arr[0].role_id;
+        var home_id = URHbyHome[i].home_id;
+
+
+        var isUserComplaint = await checkUserForComplaintFn(user_id, role_id, home_id);
+        var rolePosInArr = isRoleAlreadyInArrFn(homeSummObjArr, role_id);
+        if (rolePosInArr == -1) {
+            var homeSumObj = { 'home_id': home_id, 'role_id': role_id, 'total_staff': 0, 'complaint_staff': 0, 'non_complaint_staff': 0 };
+            if (!isUserComplaint) {
+                console.log("false")
+                homeSumObj.non_complaint_staff += 1;
+                // return false;
+            } else {
+                homeSumObj.complaint_staff += 1;
+            }
+            homeSumObj.total_staff += 1;
+            homeSummObjArr.push(homeSumObj);
+
+        } else {
+            if (!isUserComplaint) {
+                homeSummObjArr[rolePosInArr].non_complaint_staff += 1
+            } else {
+                homeSummObjArr[rolePosInArr].complaint_staff += 1
+
+            }
+            homeSummObjArr[rolePosInArr].total_staff += 1
+        }
+
+        // singleHomeCompliant.total = singleHomeCompliant.total + 1;
+
+    }
+    console.log(homeSummObjArr)
+    res.send(homeSummObjArr)
+}
+// getHomeSummary("1")
