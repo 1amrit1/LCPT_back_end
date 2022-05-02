@@ -25,7 +25,8 @@ app.use(bodyParser.urlencoded({
 
 //cross origin (cors)
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: 'https://lcpt-webportal.herokuapp.com/',
+    //origin: 'http://localhost:3000',
     credentials: true,            //access-control-allow-credentials:true
     optionSuccessStatus: 200
 }
@@ -40,6 +41,4 @@ app.use("/user/", userRouter)
 
 
 //server
-app.listen(5000, function () {
-    console.log("lcpt_back_end server at : 5000");
-});
+app.listen(process.env.PORT || 5000)
