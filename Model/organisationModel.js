@@ -8,12 +8,13 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
+                console.log(id)
                 myDatabase.collection('home').find({ 'org_id': id }).toArray(function (err, result) {
                     if (err) {
                         return retFunc(1)
                     }
                     else {
-                        console.log("===Home list === ",result);
+                        console.log("===Home list === ", result);
                         return retFunc(result)
                     }
                 })
@@ -93,8 +94,8 @@ module.exports = {
                         return retFunc(1)
                     }
 
-                    else {                        
-                       return retFunc(result)
+                    else {
+                        return retFunc(result)
                     }
                 })
 
@@ -142,7 +143,7 @@ module.exports = {
 
                     }
                     else {
-                        
+
                         myDatabase.collection('user').aggregate([{
                             $lookup: {
                                 from: "role",
@@ -226,7 +227,7 @@ module.exports = {
             else {
                 var myDatabase = dbServer.db(db_name);
                 var staffObj = {
-                    "user_id" : newStaff.user_id,
+                    "user_id": newStaff.user_id,
                     "user_name": newStaff.user_name,
                     "dob": newStaff.dob,
                     "user_email": newStaff.user_email,
@@ -256,13 +257,13 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
-                var query = {"user_id":String(newStaffStatus.id)}
+                var query = { "user_id": String(newStaffStatus.id) }
                 update = {
                     "$set": {
-                        "emp_status":newStaffStatus.emp_status
+                        "emp_status": newStaffStatus.emp_status
                     }
                 }
-                myDatabase.collection('user').updateOne(query,update, function (err, result) {
+                myDatabase.collection('user').updateOne(query, update, function (err, result) {
                     if (err) {
                         return retFunc(1)
                     }
@@ -287,7 +288,7 @@ module.exports = {
                         return retFunc(1);
                     }
                     else {
-                        console.log("=== All Home list === ",result);
+                        console.log("=== All Home list === ", result);
                         return retFunc(result);
                     }
                 })
@@ -300,7 +301,7 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
-                myDatabase.collection('home_crs_role').find({'home_id': String(id)}).toArray(function (err, result) {
+                myDatabase.collection('home_crs_role').find({ 'home_id': String(id) }).toArray(function (err, result) {
                     if (err) {
                         return retFunc(1)
                     }
