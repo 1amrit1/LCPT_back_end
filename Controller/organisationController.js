@@ -204,11 +204,29 @@ module.exports.addNewHome = function(req,res){
 /** Added by Ayush */
 module.exports.getHomeDetailsJson = function (req, res) {
     var id = req.params.id;
-   // console.log(id)
+    var queryWithDetails = {'home_id': String(id)};
+    con.getHome_Crs_Role_Json(queryWithDetails, function (result) {
+        if (result.length == 0) {
+            res.status(400).send('No Member Found!')
+        }
+        else{
+           // console.log('Ressullt ',result);
+            return res.status(200).send(result);
+        }
+    });
+}
+
+
+/** Added by Ayush */
+module.exports.getHomeRoleCourseJson = function (req, res) {
+    var id = req.params.homeId;
+    var roleId = req.params.roleId;
+    var queryWithDetails = {'home_id': String(id), 'role_id': String(roleId)};
+   console.log(queryWithDetails)
    var arrayOfHomeCourses = [];
-   var mapOfRoleCourse = new Map();
-   var course  = new Map();
-    con.getHome_Crs_Role_Json(id, function (result) {
+//    var mapOfRoleCourse = new Map();
+//    var course  = new Map();
+    con.getHome_Crs_Role_Json(queryWithDetails, function (result) {
         if (result.length == 0) {
             res.status(400).send('No Member Found!')
         }
@@ -218,36 +236,24 @@ module.exports.getHomeDetailsJson = function (req, res) {
                 if (crsResult.length==0) {
                     return res.status(400).send('No data Found!')
                 }else{
-                   // console.log(crsResult);
+                   console.log(crsResult);
                     crsResult.forEach(res => {
                         courseMap.set(String(res.courseID),res);
                     });
-
-
-                    //console.log("========Map of all courses ===== ", courseMap);
-                   
                     result.forEach(res => {
-                        mapOfRoleCourse = new Map();
-                        course  = new Map();
+                       //mapOfRoleCourse = {};
+                       // course  = {};
                         res.course_details.forEach(inner => {
                             var crsObj = courseMap.get(String(inner.id));
                             //console.log("Got course => ",crsObj);
-                            course[inner.id]=crsObj;
-                            mapOfRoleCourse.set(res.role_id +"~~"+ res.role_name, course);
-                            
+                            //course[inner.id]=crsObj;
+                           // mapOfRoleCourse[res.role_id +"~~"+ res.role_name]= course;
+                            arrayOfHomeCourses.push(crsObj);
                         });
-                        console.log("+++++++++++++++++++++++++++++++++++++");
-                       console.log("Map = > ",mapOfRoleCourse);
-                       console.log("+++++++++++++++++++++++++++++++++++++");
-                        arrayOfHomeCourses.push(mapOfRoleCourse);
-                      //  console.log("+++++++++++++++++++++++++++++++++++++");
-                      //  console.log("Map = > ",mapOfRoleCourse);
-                      //  console.log("+++++++++++++++++++++++++++++++++++++");
-
                         
                     });
-                    console.log("Array to response => ",arrayOfHomeCourses);
-                    return res.status(200).send(arrayOfHomeCourses);
+                    let response = arrayOfHomeCourses;
+                    return res.status(200).send(response);
                 }
             });
             
@@ -332,4 +338,4 @@ module.exports.getRolesFromHomeId = function (req, res) {
 
     });
 }
-        
+

@@ -97,7 +97,7 @@ module.exports.getUserCompletedCourses = async function (homeId, roleId, userId,
         else {
             var myDatabase = dbServer.db(db_name);
             console.log(userId," ",roleId," ",homeId);
-            myDatabase.collection('user_crs_mapping').find({ userId: userId, roleId: roleId, homeId: homeId  }).toArray(function (err, inner) {
+            myDatabase.collection('user_crs_mapping').find({'user_id': String(userId)}).toArray(function (err, inner) {
                 if (err) {
                     retFunc(1);
                 }else{
@@ -120,7 +120,7 @@ module.exports.getAllCourses = async function (retFunc) {
                 if (err) {
                     retFunc(1);
                 }else{
-                    console.log("======= Got result from getAllCourses ======= ", inner);
+                    console.log("======= Got result from getAllCourses ======= ", inner.length);
                     retFunc(inner);
                 }
             })

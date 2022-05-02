@@ -3,8 +3,9 @@ const path = require('path');
 var con = require('./../Model/organisationModel')
 const express = require('express');
 var { getHomeList, getOrganisationDetails, editTrainingStandards, editOrgDetails, addNewStandard, getStaffList,
-    getHomeDetails, editHomeDetails, editStaffStatus, addNewStaff, getRolesFromHomeId, getAllHomes, getHomeDetailsJson ,
+    getHomeDetails, editHomeDetails, editStaffStatus, addNewStaff, getRolesFromHomeId, getAllHomes, getHomeDetailsJson , getHomeRoleCourseJson,
      showHomeCheckList, editRoleStatus, addNewRole, getRoleTemplateDetails, addNewHome, getCourseList, addCheckListRole, editCourseDetails, addAssignRoleText } = require('../Controller/organisationController');
+
 var organizationRouter = express.Router();
 
 
@@ -52,6 +53,6 @@ organizationRouter.get('/getRoleByHomeId/:id', getRolesFromHomeId);
 
 organizationRouter.get('/getAllHomes', getAllHomes);
 organizationRouter.get('/getHomeInfo/:id', getHomeDetailsJson);
-
+organizationRouter.get('/getHRCInfo/:homeId/:roleId', getHomeRoleCourseJson);
 
 module.exports = organizationRouter;
