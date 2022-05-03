@@ -35,6 +35,7 @@ var checkUserForComplaintFn = async (user_id, role_id, home_id) => {
 var homesComplaintSummary = async (homeID) => {
     // isme hume user course and home course role table me total complaint and total number bhejna hoga of users in that home 
     var URHbyHome = await auditReportModel.getURHMapByHomeID(homeID);
+    console.log(URHbyHome);
     var singleHomeCompliant = { "total": URHbyHome.length, "total_Complaint": 0, }
     for (let i = 0; i < URHbyHome.length; i++) {
         var user_id = URHbyHome[i].user_id;
@@ -83,6 +84,7 @@ module.exports.sendOganizationSummary = async (req, res) => {
                 orgSummData.push(orgSumRow);
 
             }
+            console.log(orgSummData);
             res.send(orgSummData)
         }
 
@@ -171,3 +173,52 @@ module.exports.getHomeStaffSummData = async (req, res) => {
 }
 
 // getHomeStaffSummData("1");
+
+module.exports.getOrganizationStaffTemplates = async (req, res) => {
+    var orgId = req.params.org_id
+    // var orgId = org_id
+
+    organizationModel.getHomesList(orgId, async function (result) {
+        if (result.length == 0) {
+            res.status(400).send('No Home Found!')
+            // res.send("error!")
+        }
+        else {
+            var home_list = [];
+            var user_list = [];
+
+            //   console.log('response',result);
+            //from homes get users and from users get user course details
+            for (let i = 0; i < result.length; i++) {
+                home_list.push(result[i].home_id);
+
+            }
+            for (let i = 0; i < home_list.length; i++) {
+
+                var URHData = await auditReportModel.getURHMapByHomeID(home_list[i])
+                console.log(URHData)
+                console.log("URHData")
+                for (let j = 0; j < URHData.length; j++) {
+                    if (!user_list.includes(URHData[j].user_id)) {
+                        user_list.push(URHData[j].user_id);
+                    }
+                }
+
+            }
+            var resObjArr = [];
+            for (let i = 0; i < user_list.length; i++) {
+                var userCrsArr = await auditReportModel.getUserCourseByUser(user_list[i]);
+                console.log(userCrsArr)
+                console.log("userCrsArr")
+                resObjArr = resObjArr.concat(userCrsArr)
+            }
+            console.log("res obh arr  in getOrganizationStaffTemplates function--------------------------")
+            console.log(resObjArr);
+            res.send(resObjArr);
+        }
+
+
+    });
+
+}
+// getOrganizationStaffTemplates("1")

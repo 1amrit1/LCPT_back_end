@@ -34,10 +34,10 @@ module.exports.getURHMapByHomeID = async function (homeID) {
     // console.l
     try {
 
-        await client.connect();
+        // await client.connect();
         res = await client.db(db_name).collection("user_role_home_mapping").find({ "home_id": homeID }).toArray();
         console.log(res);
-        client.close();
+        // client.close();
     }
     catch (err) {
         console.log(err);
@@ -54,14 +54,14 @@ module.exports.getUserAllCoursesArr = async function (userID) {
     // console.l
     try {
 
-        await client.connect();
+        // await client.connect();
         var tempRes = await client.db(db_name).collection("user_crs_mapping").find({ "user_id": userID }).toArray();
         for (let i = 0; i < tempRes.length; i++) {
             res.push(tempRes[i].course_id);
         }
 
         console.log(res);
-        client.close();
+        // client.close();
     }
     catch (err) {
         console.log(err);
@@ -76,7 +76,7 @@ module.exports.getCoursesForRoleHome = async function (homeID, roleID) {
     // console.l
     try {
 
-        await client.connect();
+        // await client.connect();
         var tempRes = await client.db(db_name).collection("home_crs_role").findOne({ "home_id": homeID }, { "role_id": roleID });
         var courseArr = tempRes.course_details;
         for (i = 0; i < courseArr.length; i++) {
@@ -85,11 +85,29 @@ module.exports.getCoursesForRoleHome = async function (homeID, roleID) {
 
 
         console.log(res);
-        client.close();
+        // client.close();
     }
     catch (err) {
         console.log(err);
     }
     return res;
 }
+
 // getCoursesForRoleHome("1", "4")
+module.exports.getUserCourseByUser = async function (userID) {
+    var res = [];
+    // console.l
+    try {
+
+        // await client.connect();
+        res = await client.db(db_name).collection("user_crs_mapping").find({ "user_id": userID }).toArray();
+
+        console.log(res);
+        // client.close();
+    }
+    catch (err) {
+        console.log(err);
+    }
+    return res;
+
+}
