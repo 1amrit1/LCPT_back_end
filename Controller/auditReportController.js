@@ -142,3 +142,32 @@ module.exports.getHomeSummary = async (req, res) => {
     res.send(homeSummObjArr)
 }
 // getHomeSummary("1")
+
+module.exports.getHomeStaffSummData = async (req, res) => {
+    var homeId = req.params.home_id
+    var finalObjArr = [];
+    var URHbyHome = await auditReportModel.getURHMapByHomeID(homeId);
+    for (let i = 0; i < URHbyHome.length; i++) {
+        var roleArr = URHbyHome[i].role_arr;
+        var userId = URHbyHome[i].user_id;
+        for (let j = 0; j < roleArr.length; j++) {
+            var isURHComplaint = await checkUserForComplaintFn(userId, roleArr[j].role_id, homeId);
+            var finalObj = {
+                'user_id': userId,
+                'role_id': roleArr[j].role_id,
+                'home_id': homeId,
+                'status': URHbyHome[i].emp_status,
+                'is_complaint': isURHComplaint
+
+            }
+            finalObjArr.push(finalObj);
+
+        }
+
+    }
+    console.log(finalObjArr);
+    res.send(finalObjArr);
+
+}
+
+// getHomeStaffSummData("1");
