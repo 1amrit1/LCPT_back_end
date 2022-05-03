@@ -17,7 +17,7 @@ var checkUserForComplaintFn = async (user_id, role_id, home_id) => {
     console.log(roleHomeCrsArr)
 
     for (let i = 0; i < roleHomeCrsArr.length; i++) {
-        if (!userCrsArr.includes(roleHomeCrsArr[i])) {
+        if (!userCrsArr.includes(roleHomeCrsArr[i])) { // here one more check to see if it's document is true or do it in the model for this fn
             numNotComplaint++;
         }
     }
@@ -27,6 +27,38 @@ var checkUserForComplaintFn = async (user_id, role_id, home_id) => {
     } else {
         return true;
     }
+
+
+
+}
+var userMissingCourses = async (user_id, role_id, home_id) => {
+    //loop to get all the user's courses in an array
+
+    //get the courses array from home_crs_role by find query on home and role id.
+
+    // outer loop on courses array from home_crs_role to every course_id
+    // inner loop on user's courses array => to check if the array home_crs is in it or not.
+
+    var userCrsArr = await auditReportModel.getUserAllCoursesArr(user_id)
+
+    var roleHomeCrsArr = await auditReportModel.getCoursesForRoleHome(home_id, role_id);
+    // var numNotComplaint = 0;
+    console.log(userCrsArr)
+    console.log(roleHomeCrsArr)
+    var missingCourseArr = [];
+
+    for (let i = 0; i < roleHomeCrsArr.length; i++) {
+        if (!userCrsArr.includes(roleHomeCrsArr[i])) {// here one more check to see if it's document is true or do it in the model for this fn
+            missingCourseArr.push(roleHomeCrsArr[i])
+        }
+    }
+    return missingCourseArr;
+
+    // if (numNotComplaint > 0) {
+    //     return false;
+    // } else {
+    //     return true;
+    // }
 
 
 
@@ -222,3 +254,58 @@ module.exports.getOrganizationStaffTemplates = async (req, res) => {
 
 }
 // getOrganizationStaffTemplates("1")
+
+module.exports.getOrganizationDeficiencyData = async (req, res) => {
+    var orgId = req.params.org_id
+    organizationModel.getHomesList(orgId, async function (result) {
+        if (result.length == 0) {
+            res.status(400).send('No Home Found!')
+            // res.send("error!")
+        }
+        else {
+            var home_list = [];
+            // var user_list = [];
+            var resObjArr = [];
+
+            //   console.log('response',result);
+            //from homes get users and from users get user course details
+            for (let i = 0; i < result.length; i++) {
+                home_list.push(result[i].home_id);
+
+            }
+            for (let i = 0; i < home_list.length; i++) {
+
+                var URHData = await auditReportModel.getURHMapByHomeID(home_list[i])
+                console.log(URHData)
+                console.log("URHData")
+                for (let j = 0; j < URHData.length; j++) {
+                    var roleArr = URHData[j].role_arr
+                    for (let k = 0; k < roleArr.length; k++) {
+
+                        var URHMissingCrs = userMissingCourses(URHData[j].user_id, roleArr[k].role_id, URHData[j].home_id)
+                        console.log(URHMissingCrs)
+                        var resObj = {
+                            "user_id": URHData[j].user_id,
+                            "role_id": roleArr[k].role_id,
+                            "home_id": URHData[j].home_id,
+                            "missing_courses": (await URHMissingCrs).toString()
+                        }
+                        resObjArr.push(resObj);
+                    }
+
+                }
+
+            }
+
+
+
+            console.log(resObjArr);
+
+            res.send(resObjArr);
+        }
+
+
+    });
+
+}
+// getOrganizationDeficiencyData("1");
