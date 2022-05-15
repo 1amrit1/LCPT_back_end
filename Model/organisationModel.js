@@ -21,6 +21,24 @@ module.exports = {
             }
         })
     },
+    getOrganizationsList(id, retFunc) {
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+                console.log(id)
+                myDatabase.collection('organisation').find().toArray(function (err, result) {
+                    if (err) {
+                        return retFunc(1)
+                    }
+                    else {
+                        console.log("===Home list === ", result);
+                        return retFunc(result)
+                    }
+                })
+            }
+        })
+    },
 
     getOrganisationDetails(id, retFunc) {
         mongoClient.connect(db_url, function (err, dbServer) {
