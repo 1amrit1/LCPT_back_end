@@ -5,13 +5,15 @@ var bodyParser = require('body-parser')
 const organisationRouter = require('./Routes/orgnizationRouter');
 const courseRouter = require('./Routes/courseRouter');
 const userRouter = require('./Routes/userRouter');
+const auditReportRouter = require('./Routes/auditReportRouter');
+const adminDataRouter = require('./Routes/adminDataRouter')
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://hanishdb:Hanish8013@cluster0.381hf.mongodb.net/LCPT?retryWrites=true&w=majority');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback () {
-  console.log("Connect to MongoDb");
+db.once('open', function callback() {
+    console.log("Connect to MongoDb");
 });
 
 const app = express();
@@ -38,6 +40,8 @@ app.use("/", landingRouter);
 app.use("/orgnization/", organisationRouter);
 app.use("/course/", courseRouter)
 app.use("/user/", userRouter)
+app.use("/audit-report/", auditReportRouter)
+app.use("/admin-data/", adminDataRouter)
 
 
 //server
