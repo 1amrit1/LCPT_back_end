@@ -1,5 +1,6 @@
 const User = require('../Model/userModelSchema');
 var UserService = require('../Service/userService'); 
+var RoleService = require('../Service/roleService'); 
 
 exports.getAllUsers = async function (req, res, next) {
     // Validate request parameters, queries using express-validator
@@ -65,4 +66,18 @@ exports.updateUser = async function (req, res, next) {
     } catch (e) {
         return res.status(400).json({ status: 400, message: e.message });
     }
+}
+
+exports.fetchUserHomeRoleMapping = function (req, res) {
+    var userId = req.params.id;
+    RoleService.getUserHomeRoleDetails(userId, function (result) {
+        if (result.length == 0) {
+            res.status(400).send('No User-Role-Home Mapping Found!')
+        }
+        else{
+            console.log("=== User Role Home Mapping === \n", result);
+            res.status(200).send(result);
+        }
+
+    });
 }
