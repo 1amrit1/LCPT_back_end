@@ -9,11 +9,12 @@ const auditReportRouter = require('./Routes/auditReportRouter');
 const adminDataRouter = require('./Routes/adminDataRouter')
 
 var mongoose = require('mongoose');
+const PORT = process.env.PORT || 5000;
 mongoose.connect('mongodb+srv://hanishdb:Hanish8013@cluster0.381hf.mongodb.net/LCPT?retryWrites=true&w=majority');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback() {
-    console.log("Connect to MongoDb");
+    console.log("Connected to MongoDb");
 });
 
 const app = express();
@@ -45,4 +46,7 @@ app.use("/admin-data/", adminDataRouter)
 
 
 //server
-app.listen(process.env.PORT || 5000)
+app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
+  });
+  

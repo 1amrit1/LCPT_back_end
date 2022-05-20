@@ -111,7 +111,7 @@ module.exports.updateCourseFn = async function (req, res) {
                                                         mapOfCoursesCompleted['validity'] = lowest.validity_duration;
                                                         mapOfCoursesCompleted['extDoc'] = (lowest.badging_document_url === undefined) ? 'N/A' : lowest.badging_document_url;
                                                         mapOfCoursesCompleted['sharedEmp'] = (lowest.shared_with_emp === undefined) ? 'No' : lowest.shared_with_emp;;
-                                                        mapOfCoursesCompleted['status'] = (lowest.status === true) ? 'Complete' : 'Pending';
+                                                        mapOfCoursesCompleted['status'] = 'Complete';
                                                         arrayOfCourseCompleted.push(mapOfCoursesCompleted);
                                                     }
                                                 });
