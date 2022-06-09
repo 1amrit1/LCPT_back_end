@@ -1,41 +1,37 @@
-// const bcrypt = require('bcrypt');
-const { MongoClient } = require('mongodb');
-const mongoose = require('mongoose');
-const saltRounds = 10;
-const url = "mongodb://127.0.0.1:27017/";
-const db_name = "lcpt_db";
+const MongoClient = require('mongodb').MongoClient;
+const db_name = "LCPT";
+const url = "mongodb+srv://hanishdb:Hanish8013@cluster0.381hf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(url);
-const mongoose = require('mongoose');
 
-// main().catch(err => console.log(err));
 
-// async function main() {
-//     await mongoose.connect('mongodb://localhost:27017/test');
-// }
+client.connect();
 
-// const loginSchema = new Schema({
-//     username: String, // String is shorthand for {type: String}
-//     password: String,
-//     role: String,
+module.exports.insert_1_login = async function (loginObj) {
+    var res = {};
+    try {
 
-// });
+        res = await client.db(db_name).collection("login").insertOne(loginObj);
+    } catch (err) {
+        console.log(err)
+    }
 
-//create
-module.exports.insert_1_user = async function (userName, password, role) {
-    var res;
-    console.log("in insert user");
-
-    // var passwordHash;
-    // bcrypt.hash(password, saltRounds, async function (err, hash) {
-    // passwordHash = hash;
-    var userObj = { "userName": userName, "password": password, "role": role };
-
-    await client.connect();
-    res = await client.db(db_name).collection("login_table").insertOne(userObj);
-    console.log(res + "-----------------in insert user")
     console.log(res);
-    client.close();
-    return true;
-    // });
+    return res;
+
 }
-insert_1_user("admin2", "12345", "admin")
+
+module.exports.get_1_login = async function (loginId, password) {
+    var res = {};
+    try {
+
+        // await client.connect();
+        res = await client.db(db_name).collection("login").findOne({ "login_id": loginId, "password": password });
+        console.log(res);
+        // client.close();
+    }
+    catch (err) {
+        console.log(err);
+    }
+    return res;
+
+}

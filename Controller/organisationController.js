@@ -192,7 +192,7 @@ module.exports.addNewHome = function(req,res){
     var homeObj = req.body
     con.addNewHome(homeObj, function (result) {
         if (result.length == 0) {
-            res.status(400).send('No Role Found!')
+            res.status(400).send('Something Went Wrong!')
         }
         else{
             res.status(200).send(result);
@@ -333,6 +333,18 @@ module.exports.getRolesFromHomeId = function (req, res) {
         }
         else{
             console.log("=== Result === ", result);
+            res.status(200).send(result);
+        }
+
+    });
+}
+module.exports.addNewOrg = function(req,res){
+    var OrgObj = req.body
+    con.addNewOrg(OrgObj, function (result) {
+        if (result.length == 0) {
+            res.status(400).send('Something Went Wrong!')
+        }
+        else{
             res.status(200).send(result);
         }
 

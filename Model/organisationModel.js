@@ -163,25 +163,9 @@ module.exports = {
                     else {
                         // <<<<<<< HEAD
 
-                        myDatabase.collection('user').aggregate([{
-                            $lookup: {
-                                from: "role",
-                                localField: "role_id",
-                                foreignField: "role_id",
-                                as: "role_detail"
-                            }
-                        }]).toArray(function (err, newResult) {
-                            if (err) {
-                                return retFunc(1)
-
-                            }
-                            else {
-
-                                return retFunc(newResult)
-                            }
-                        })
+                     
                         // =======
-                        // return retFunc(result)
+                         return retFunc(result)
 
                         // >>>>>>> 43ef4be30c5bc558697553bf35de5510eeefff34
                     }
@@ -340,6 +324,7 @@ module.exports = {
                         //         return retFunc(courseResult)
                         //     }
                         // })
+                        console.log("Get all my details",result)
                         return retFunc(result)
                     }
                 })
@@ -569,6 +554,24 @@ module.exports = {
                         return retFunc(result)
                     }
                 })
+            }
+        })
+    },
+    addNewOrg(OrgObj,retFunc){
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+                myDatabase.collection('organisation').insertOne(OrgObj, function (err, result) {
+                    if (err) {
+                        return retFunc(1)
+                    }
+
+                    else {
+                        return retFunc(result)
+                    }
+                })
+
             }
         })
     }

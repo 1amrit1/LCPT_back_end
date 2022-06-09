@@ -6,7 +6,8 @@ const organisationRouter = require('./Routes/orgnizationRouter');
 const courseRouter = require('./Routes/courseRouter');
 const userRouter = require('./Routes/userRouter');
 const auditReportRouter = require('./Routes/auditReportRouter');
-const adminDataRouter = require('./Routes/adminDataRouter')
+const adminDataRouter = require('./Routes/adminDataRouter');
+const loginRouter = require('./Routes/loginRouter')
 
 var mongoose = require('mongoose');
 const PORT = process.env.PORT || 5000;
@@ -38,6 +39,7 @@ app.use(cors());
 
 //routers
 app.use("/", landingRouter);
+app.use("/auth", loginRouter);
 app.use("/orgnization/", organisationRouter);
 app.use("/course/", courseRouter)
 app.use("/user/", userRouter)
