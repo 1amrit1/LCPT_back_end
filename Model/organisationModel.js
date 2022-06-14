@@ -11,11 +11,11 @@ module.exports = {
                 console.log(id)
                 myDatabase.collection('home').find({ 'org_id': id }).toArray(function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
                     else {
                         console.log("===Home list === ", result);
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
             }
@@ -29,11 +29,11 @@ module.exports = {
                 console.log(id)
                 myDatabase.collection('organisation').find().toArray(function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
                     else {
                         console.log("===Home list === ", result);
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
             }
@@ -47,12 +47,11 @@ module.exports = {
                 var myDatabase = dbServer.db(db_name);
                 myDatabase.collection('organisation').find({ org_id: id }).toArray(function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        //    console.log("org details",result)
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
             }
@@ -74,15 +73,13 @@ module.exports = {
                             "train_standards": trainingObj.trainStandards
                         }
                     }
-                // console.log(trainingObj)
                 myDatabase.collection('organisation').updateOne(query, update, function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return  retFunc({"success":false,result:err})
                     }
 
                     else {
-                        //   console.log("org details",result)
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -106,14 +103,13 @@ module.exports = {
                             "email_id": orgDetailObj.email_id
                         }
                     }
-                //console.log(trainingObj)
                 myDatabase.collection('organisation').updateOne(query, update, function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -138,11 +134,11 @@ module.exports = {
                 //console.log(trainingObj)
                 myDatabase.collection('organisation').updateOne(query, update, function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -154,20 +150,12 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
-                //     console.log("getting hit: ",id)
                 myDatabase.collection('user_role_home_mapping').find({ home_id: id }).toArray(function (err, result) {
                     if (err) {
-                        return retFunc(1)
-
+                        return retFunc({"success":false,result:err})
                     }
-                    else {
-                        // <<<<<<< HEAD
-
-                     
-                        // =======
-                         return retFunc(result)
-
-                        // >>>>>>> 43ef4be30c5bc558697553bf35de5510eeefff34
+                    else {                       
+                         return retFunc({"success":true,result:result})
                     }
                 })
             }
@@ -180,53 +168,17 @@ module.exports = {
                 var myDatabase = dbServer.db(db_name);
                 myDatabase.collection('home').find({ home_id: id }).toArray(function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        //  console.log("home details",result)
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
             }
         })
     },
-    // editOrgDetails(orgDetailObj, retFunc) {
-    //     mongoClient.connect(db_url, function (err, dbServer) {
-    //         if (err) throw err;
-    //         else {
-    //             var myDatabase = dbServer.db(db_name);
-    //            // var homeDetailObj = homeDetail.homeDetails
-
-    //             console.log("to see org details", orgDetailObj)
-    //             var query = {
-    //                 "org_id": orgDetailObj.org_id,
-    //                 "home_id": orgDetailObj.home_id
-    //             },
-    //                 update = {
-    //                     "$set": {
-    //                         "name": orgDetailObj.name,
-    //                         "contact_firstName": orgDetailObj.contact_firstName,
-    //                         "contact_lastName": orgDetailObj.contact_lastName,
-    //                         "phone_no": orgDetailObj.phone_no,
-    //                         "email_id": orgDetailObj.email_id
-    //                     }
-    //                 }
-    //             //console.log(trainingObj)
-    //             myDatabase.collection('home').updateOne(query, update, function (err, result) {
-    //                 if (err) {
-    //                     return retFunc(1)
-    //                 }
-
-    //                 else {
-    //                     console.log("Home details here", result)
-    //                     return retFunc(result)
-    //                 }
-    //             })
-
-    //         }
-    //     })
-    // },
+    
     addNewStaff(addStaffObj, retFunc) {
         mongoClient.connect(db_url, function (err, dbServer) {
 
@@ -235,35 +187,23 @@ module.exports = {
                 var myDatabase = dbServer.db(db_name);
                 home_arr = [];
                 role_arr = []
-                // home_arr.push({"home_id":addStaffObj.home_id})
                 role_arr.push({ "role_id": addStaffObj.role_id, "role_name": addStaffObj.role_name })
                 var staffObj = {
-                    // <<<<<<< HEAD
-                    //                     "user_id": newStaff.user_id,
-                    //                     "user_name": newStaff.user_name,
-                    //                     "dob": newStaff.dob,
-                    //                     "user_email": newStaff.user_email,
-                    //                     "org_id": newStaff.org_id,
-                    //                     "role_id": newStaff.role_id,
-                    //                     "emp_status": newStaff.emp_status,
-                    //                     "home_id": newStaff.home_id
-                    // =======
                     "user_id": addStaffObj.user_id,
                     "dob": addStaffObj.dob,
                     "role_arr": role_arr,
                     "emp_status": addStaffObj.emp_status,
                     "home_id": addStaffObj.home_id,
                     "user_name": addStaffObj.user_name
-                    // >>>>>>> 43ef4be30c5bc558697553bf35de5510eeefff34
                 }
                 console.log(staffObj)
                 myDatabase.collection('user_role_home_mapping').insertOne(staffObj, function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -283,18 +223,13 @@ module.exports = {
                         "emp_status": newStaffStatus.emp_status
                     }
                 }
-                // <<<<<<< HEAD
-                //                 myDatabase.collection('user').updateOne(query, update, function (err, result) {
-                // =======
                 myDatabase.collection('user_role_home_mapping').updateOne(query, update, function (err, result) {
-                    // >>>>>>> 43ef4be30c5bc558697553bf35de5510eeefff34
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        console.log(result)
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -309,23 +244,12 @@ module.exports = {
 
                 myDatabase.collection('home_crs_role').find({ home_id: id }).toArray(function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        //  console.log("Here details",result," id:",String(id))
-                        //  myDatabase.collection('course').find().toArray(function (err, courseResult) {
-                        //     if (err) {
-                        //         return retFunc(1)
-                        //     }
-
-                        //     else {
-                        //            console.log("Here course details and roleDetails",result,courseResult)
-                        //         return retFunc(courseResult)
-                        //     }
-                        // })
-                        console.log("Get all my details",result)
-                        return retFunc(result)
+                       
+                        return retFunc({"success":true,result:result})
                     }
                 })
             }
@@ -344,12 +268,11 @@ module.exports = {
                 }
                 myDatabase.collection('home_crs_role').updateOne(query, update, function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        //    console.log(result)
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -367,14 +290,13 @@ module.exports = {
                     "role_id": addRoleObj.role_id,
                     "home_id": addRoleObj.home_id
                 }
-                // console.log("role OBJ ",roleObj)
                 myDatabase.collection('home_crs_role').insertOne(roleObj, function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -389,13 +311,11 @@ module.exports = {
 
                 myDatabase.collection('home_crs_role').find({ "home_id": idDetails.home_id, "role_id": idDetails.role_id }).toArray(function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-
-                        //   console.log("Here template details",idDetails)
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
             }
@@ -410,14 +330,14 @@ module.exports = {
 
                 myDatabase.collection('course').find().toArray(function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        //   console.log("Here course details",result)
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
+                
             }
         })
     },
@@ -426,22 +346,13 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
-                // var roleObj = {
-
-                //     "course_details": addHomeObj.course_details,
-                //     "role_name": addHomeObj.role_name,
-                //     "org_id": addHomeObj.org_id,
-                //     "role_id": addHomeObj.role_id,
-                //     "home_id": addHomeObj.home_id
-                // }
-                // console.log("role OBJ ",roleObj)
                 myDatabase.collection('home').insertOne(addHomeObj, function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -453,14 +364,13 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
-                // console.log("role obj",roleObj)
                 myDatabase.collection('home_crs_role').insertOne(roleObj, function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -481,11 +391,11 @@ module.exports = {
                 }
                 myDatabase.collection('home_crs_role').updateOne(query, update, function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -497,7 +407,6 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
-                console.log("role obj", roleObj)
                 var query = { "user_id": String(roleObj.user_id), "home_id": String(roleObj.home_id) }
                 update = {
                     "$set": {
@@ -506,11 +415,11 @@ module.exports = {
                 }
                 myDatabase.collection('user_role_home_mapping').updateOne(query, update, function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -540,18 +449,13 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
-                // <<<<<<< HEAD
-                //                 myDatabase.collection('home_crs_role').find({ 'home_id': String(id) }).toArray(function (err, result) {
-                // =======
-                myDatabase.collection('home_crs_role').find(query).toArray(function (err, result) {
-                    // >>>>>>> 43ef4be30c5bc558697553bf35de5510eeefff34
+               myDatabase.collection('home_crs_role').find(query).toArray(function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        //  console.log("home details",result)
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
             }
@@ -564,11 +468,11 @@ module.exports = {
                 var myDatabase = dbServer.db(db_name);
                 myDatabase.collection('organisation').insertOne(OrgObj, function (err, result) {
                     if (err) {
-                        return retFunc(1)
+                        return retFunc({"success":false,result:err})
                     }
 
                     else {
-                        return retFunc(result)
+                        return retFunc({"success":true,result:result})
                     }
                 })
 

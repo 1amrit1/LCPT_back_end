@@ -38,7 +38,7 @@ app.use(cors());
 
 //routers
 app.use("/", landingRouter);
-app.use("/auth", loginRouter);
+app.use("/login", loginRouter);
 app.use("/orgnization/", organisationRouter);
 app.use("/course/", courseRouter)
 app.use("/user/", userRouter)

@@ -10,15 +10,20 @@ var courseModel = require('./../Model/courseModel');
 
 
 //get list of all homes in organisation
-module.exports.getHomeList = function (req, res) {
+module.exports.getHomeList =  function (req, res) {
     var id = req.params.id;
-    con.getHomesList(id, function (result) {
-        if (result.length == 0) {
+   // check('id');
+
+     con.getHomesList(id, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if (resultObj.success && resultObj.result.length == 0) {
             res.status(400).send('No Home Found!')
         }
         else{
          //   console.log('response',result);
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
 
     });
@@ -26,13 +31,15 @@ module.exports.getHomeList = function (req, res) {
 
 module.exports.getOrganisationDetails = function (req, res) {
     var id = req.params.id;
-    con.getOrganisationDetails(id, function (result) {
-        if (result.length == 0) {
-            res.status(400).send('No Organisation Found!')
+    con.getOrganisationDetails(id, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if (resultObj.success && resultObj.result.length==0) {
+            res.status(200).send('No Organisation Found!')
         }
         else{
-       //     console.log('response',result);
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
 
     });
@@ -40,162 +47,186 @@ module.exports.getOrganisationDetails = function (req, res) {
 
 module.exports.editTrainingStandards = function (req, res) {
     var trainingObj = req.body
-    console.log("trainingObj",trainingObj)
-    con.editTrainingStandards(trainingObj, function (result) {
-        if (result.length == 0) {
-            res.status(400).send('No Organisation Found!')
+    con.editTrainingStandards(trainingObj, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if (resultObj.success && resultObj.result.length == 0) {
+            res.status(200).send('No Standards Found!')
         }
         else{
-         //   console.log('response',result);
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
         
       });
 }
 module.exports.editOrgDetails = function(req,res){
-    console.log(req.body)
     var editOrgDetailObj = req.body;
-    con.editOrgDetails(editOrgDetailObj,function(result){
-        if(result.length==0){
-            res.status(400).send('No Organisation Found!')
+    con.editOrgDetails(editOrgDetailObj,function(resultObj){
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if(resultObj.success && resultObj.result.length==0){
+            res.status(200).send('No Organisation Found!')
         }
         else{
-            res.status(200).send(result);
-        }
-        
+            res.status(200).send(resultObj.result);
+        }        
       });
 }
 
 module.exports.addNewStandard = function(req,res){
-    console.log(req.body)
     let newStandardObj = req.body
-    con.addNewStandard(newStandardObj,function(result){
-        if(result.length==0){
-            res.status(400).send('No Organisation Found!')
+    con.addNewStandard(newStandardObj,function(resultObj){
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
         }
+        
         else{
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
         
       });
 }
 module.exports.getStaffList = function (req, res) {
     var id = req.params.id;
-    con.getStaffList(id, function (result) {
-        if (result.length == 0) {
+    con.getStaffList(id, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        if (resultObj.success && resultObj.result.length == 0) {
             res.status(400).send('No Member Found!')
         }
         else{
-         //   console.log('response',result);
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
 
     });
 }
 module.exports.getHomeDetails = function (req, res) {
     var id = req.params.id;
-   // console.log(id)
-    con.getHomeDetails(id, function (result) {
-        if (result.length == 0) {
-            res.status(400).send('No Member Found!')
+    con.getHomeDetails(id, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if (resultObj.success && resultObj.result.length == 0) {
+            res.status(400).send('No Home Found!')
         }
         else{
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
 
     });
 }
 module.exports.editHomeDetails = function(req,res){
     var homeDetailObj = req.body
-    con.editOrgDetails(homeDetailObj,function(result){
-        if(result.length==0){
-            res.status(400).send('No Organisation Found!')
+    con.editOrgDetails(homeDetailObj,function(resultObj){
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if(resultObj.success && resultObj.result.length==0){
+            res.status(400).send('No Home Found!')
         }
         else{
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
         
       });
 }
 module.exports.editStaffStatus = function(req,res){
     var staffStatus = req.body;
-    con.editStaffStatus(staffStatus,function(result){
-        if(result.length==0){
-            res.status(400).send('No User Found!')
+    con.editStaffStatus(staffStatus,function(resultObj){
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        if(resultObj.success && resultObj.result.length==0){
+            res.status(400).send('No Staff Found!')
         }
         else{
-            res.status(200).send(result)
+            res.status(200).send(resultObj.result)
         }
     })
 }
 module.exports.addNewStaff = function(req,res){
     var addStaffObj = req.body;
-    con.addNewStaff(addStaffObj,function(result){
-        if(result.length==0){
-            res.status(400).send('No User Found!')
+    con.addNewStaff(addStaffObj,function(resultObj){
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
         }
         else{
-            res.status(200).send(result)
+            res.status(200).send(resultObj.result)
         }
     })
 }
 module.exports.showHomeCheckList = function(req,res){
     var id = req.params.id;
-    con.showHomeCheckList(id,function(result){
-       // console.log("checkList result",result)
-        if(result.length==0){
+    con.showHomeCheckList(id,function(resultObj){
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        if(resultObj.success && resultObj.result.length==0){
             res.status(400).send('No Role Found!')
         }
         else{
-            res.status(200).send(result)
+            res.status(200).send(resultObj.result)
         }
     })
 }
 module.exports.editRoleStatus = function(req,res){
-    //var id = req.params.id;
     var editRoleObj = req.body
-    con.editRoleStatus(editRoleObj,function(result){
-        if(result.length==0){
-            res.status(400).send('No Role Found!')
+    con.editRoleStatus(editRoleObj,function(resultObj){
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if(resultObj.success && resultObj.result.length==0){
+            res.status(200).send('No Role Found!')
         }
         else{
-            res.status(200).send(result)
+            res.status(200).send(resultObj.result)
         }
     })
 }
 module.exports.addNewRole = function(req,res){
-    //var id = req.params.id;
     var newRoleObj = req.body
-    con.addNewRole(newRoleObj,function(result){
-        if(result.length==0){
-            res.status(400).send('Sorry! Something went wrong.')
+    con.addNewRole(newRoleObj,function(resultObj){
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if(resultObj.success && resultObj.result.length==0){
+            res.status(400).send('Something went wrong!')
         }
         else{
-            res.status(200).send(result)
+            res.status(200).send(resultObj.result)
         }
     })
 }
 module.exports.getRoleTemplateDetails = function(req,res){
     var home_id = req.params.homeId;
     var role_id = req.params.roleId;
-    con.getRoleTemplateDetails({"home_id":home_id,"role_id":role_id}, function (result) {
-        if (result.length == 0) {
-            res.status(400).send('No Role Found!')
+    con.getRoleTemplateDetails({"home_id":home_id,"role_id":role_id}, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if (resultObj.success && resultObj.result.length == 0) {
+            res.status(200).send('No Role Found!')
         }
         else{
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
 
     });
 }
 module.exports.addNewHome = function(req,res){
     var homeObj = req.body
-    con.addNewHome(homeObj, function (result) {
-        if (result.length == 0) {
-            res.status(400).send('Something Went Wrong!')
+    con.addNewHome(homeObj, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        if (resultObj.success && resultObj.result.length == 0) {
+            res.status(200).send('Something Went Wrong!')
         }
         else{
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
 
     });
@@ -262,49 +293,61 @@ module.exports.getHomeRoleCourseJson = function (req, res) {
         }})
     }
 module.exports.getCourseList = function(req,res){
-   
-    con.getCourseList(function (result) {
-        if (result.length == 0) {
-            res.status(400).send('No Course Found!')
+    con.getCourseList(function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if (resultObj.success && resultObj.result.length == 0) {
+            res.status(200).send('No Course Found!')
         }
         else{
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
 
     });
 }
 module.exports.addCheckListRole = function(req,res){
     var roleObj = req.body
-    con.addCheckListRole(roleObj, function (result) {
-        if (result.length == 0) {
-            res.status(400).send('Sorry Something went wrong!')
+    console.log("In checkList Body",roleObj)
+    con.addCheckListRole(roleObj, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        if (resultObj.success && resultObj.result.length == 0) {
+            res.status(400).send('Something went wrong!')
         }
         else{
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
 
     });
 }
 module.exports.editCourseDetails =  function(req,res){
     var roleObj = req.body
-    con.editCourseDetails(roleObj, function (result) {
-        if (result.length == 0) {
-            res.status(400).send('Sorry Something went wrong!')
+    con.editCourseDetails(roleObj, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if (resultObj.success && resultObj.result.length == 0) {
+            res.status(400).send('Something went wrong!')
         }
         else{
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
 
     });
 }
 module.exports.addAssignRoleText = function(req,res){
     var roleObj = req.body
-    con.addAssignRoleText(roleObj, function (result) {
-        if (result.length == 0) {
-            res.status(400).send('Sorry Something went wrong!')
+    con.addAssignRoleText(roleObj, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if (resultObj.success && resultObj.result.length == 0) {
+            res.status(400).send('Something went wrong!')
         }
         else{
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
 
     });
@@ -341,11 +384,14 @@ module.exports.getRolesFromHomeId = function (req, res) {
 module.exports.addNewOrg = function(req,res){
     var OrgObj = req.body
     con.addNewOrg(OrgObj, function (result) {
-        if (result.length == 0) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        if (resultObj.success && resultObj.result.length == 0) {
             res.status(400).send('Something Went Wrong!')
         }
         else{
-            res.status(200).send(result);
+            res.status(200).send(resultObj.result);
         }
 
     });
