@@ -20,13 +20,16 @@ module.exports.insert_1_login = async function (loginObj) {
 
 }
 
-module.exports.get_1_login = async function (loginId, password) {
+module.exports.get_1_login = async function (login_id, password) {
     var res = {};
     try {
 
         // await client.connect();
-        res = await client.db(db_name).collection("login").findOne({ "login_id": loginId, "password": password });
-        console.log(res);
+        res = await client.db(db_name).collection("login").findOne({ "login_id": login_id, "password": password });
+        console.log(login_id,password);
+        if(!res){
+            return 'No User Found!'
+        }
         // client.close();
     }
     catch (err) {
