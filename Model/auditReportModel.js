@@ -57,7 +57,10 @@ module.exports.getUserAllCoursesArr = async function (userID) {
         // await client.connect();
         var tempRes = await client.db(db_name).collection("user_crs_mapping").find({ "user_id": userID }).toArray();
         for (let i = 0; i < tempRes.length; i++) {
-            res.push(tempRes[i].course_id);
+            if (tempRes[i].status == true) {
+
+                res.push(tempRes[i].course_id);
+            }
         }
 
         console.log(res);
