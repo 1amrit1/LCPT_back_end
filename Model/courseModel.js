@@ -72,7 +72,7 @@ module.exports.update_1_course = async function (courseID, updateObj) {
 }
 
 module.exports.getUserCourseDetails = async function (homeId, roleId, userId, retFunc) {
-    var response = [];
+   // var response = [];
     MongoClient.connect(url, function (err, dbServer) {
         if (err) throw err;
         else {
@@ -87,7 +87,7 @@ module.exports.getUserCourseDetails = async function (homeId, roleId, userId, re
             })
         }
     })
-    console.log("=======> Response == ", response);
+   // console.log("=======> Response == ", response);
     return retFunc;
 }
 

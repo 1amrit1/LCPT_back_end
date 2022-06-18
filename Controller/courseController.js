@@ -55,28 +55,28 @@ module.exports.updateCourseFn = async function (req, res) {
     }
 
     module.exports.getUserBasedCourseDetails = async function (req, res) {
-    var homeId = 1;//req.body.homeId;
-    var roleId = 4;//req.body.roleId;
-    var userId = 2;//req.body.userId;
+    var homeId = req.body.homeId;
+    var roleId = req.body.roleId;
+    var userId = req.body.userId;
         var allCourseJson = [];
         var userCourseJson = [];
         var allCourseList = [];
         console.log(homeId," == ", roleId," == ", userId);
+        console.log("=========== Going to fetch courses based on Home&Role ======= ");
             await courseModel.getUserCourseDetails(homeId, roleId, userId, function (result) {
                 if (result.length==0) {
                     return res.status(400).send('No data Found!')
                 }
                 else{ 
-                    console.log("=========== Got response ======= ", result);
                     allCourseJson.push(result);
+                    console.log("=========== Going to fetch User completed courses ======= ");
                     courseModel.getUserCompletedCourses(homeId, roleId, userId, function (result) {
                         if (result.length==0) {
                             return res.status(400).send('No data Found!')
                         }
                         else{
-                            console.log("=========== Got response ======= ", result);
                             userCourseJson.push(result);
-
+                            console.log("=========== Going to fetch All courses ======= ");
                             courseModel.getAllCourses(function (result) {
                                 if (result.length==0) {
                                     return res.status(400).send('No data Found!')
@@ -111,7 +111,7 @@ module.exports.updateCourseFn = async function (req, res) {
                                                         mapOfCoursesCompleted['validity'] = lowest.validity_duration;
                                                         mapOfCoursesCompleted['extDoc'] = (lowest.badging_document_url === undefined) ? 'N/A' : lowest.badging_document_url;
                                                         mapOfCoursesCompleted['sharedEmp'] = (lowest.shared_with_emp === undefined) ? 'No' : lowest.shared_with_emp;;
-                                                        mapOfCoursesCompleted['status'] = (lowest.status === true) ? 'Complete' : 'Pending';
+                                                        mapOfCoursesCompleted['status'] = 'Complete';
                                                         arrayOfCourseCompleted.push(mapOfCoursesCompleted);
                                                     }
                                                 });

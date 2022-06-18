@@ -22,4 +22,24 @@ module.exports = {
             }
         })
     },
+
+    getUserHomeRoleDetails(id, retFunc) {
+        try {
+            mongoClient.connect(db_url, function (err, dbServer) {
+                if (err) throw err;
+                else {
+                    var myDatabase = dbServer.db(db_name);
+                    myDatabase.collection('user_role_home_mapping').find({ 'user_id': String(id) }).toArray(function (err, result) {
+                        if (err) {
+                            return retFunc(1)
+                        }else{
+                            return retFunc(result)
+                        }
+                    })
+                }
+            })
+        } catch (e) {
+            throw Error('Error while fetching User Role Home Mapping.')
+        }
+    }
 }
