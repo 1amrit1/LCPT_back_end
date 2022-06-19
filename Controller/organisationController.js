@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+//var path = require('path');
 
 const { check, body, validationResult } = require('express-validator');
 const path = require('path');
@@ -392,6 +393,27 @@ module.exports.addNewOrg = function(req,res){
         }
         else{
             res.status(200).send(resultObj.result);
+        }
+
+    });
+}
+
+
+/** Added by Ayush */
+module.exports.verifyNewUserForHome = function(req,res){
+    var userId = req.params.userId;
+    var homeId = req.params.homeId;
+    console.log(' Email confirmation > ',userId, homeId);
+    con.verifyNewUserForHome(userId, homeId, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        if (resultObj.success && resultObj.result.length == 0) {
+            res.status(400).send('Something Went Wrong!')
+        }
+        else{
+            res.sendFile(path.resolve('./Service/emailResponse.html'));
+           //res.status(200).sendFile('../Service/emailResponse.html', {root: __dirname })
         }
 
     });

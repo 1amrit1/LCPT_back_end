@@ -3,6 +3,7 @@ var mongoose = require('mongoose')
 const UserSchema  = new mongoose.Schema({
     user_id: Number,
     fullName: String,
+    userName: String,
     password: String,
     dob: String,
     email: String,

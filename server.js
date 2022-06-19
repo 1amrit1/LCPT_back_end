@@ -29,8 +29,8 @@ app.use(bodyParser.urlencoded({
 
 //cross origin (cors)
 const corsOptions = {
-    origin: 'https://lcpt-webportal.herokuapp.com/',
-    //origin: 'http://localhost:3000',
+    //origin: 'https://lcpt-webportal.herokuapp.com/',
+    origin: 'http://localhost:3000',
     credentials: true,            //access-control-allow-credentials:true
     optionSuccessStatus: 200
 }

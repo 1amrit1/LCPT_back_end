@@ -1,6 +1,8 @@
 const mongoClient = require('mongodb').MongoClient;
 const db_url = "mongodb+srv://hanishdb:Hanish8013@cluster0.381hf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const db_name = "LCPT";
+var EmailService = require('../Service/email'); 
+
 module.exports = {
 
     getHomesList(id, retFunc) {
@@ -179,6 +181,7 @@ module.exports = {
         })
     },
     
+    
     addNewStaff(addStaffObj, retFunc) {
         mongoClient.connect(db_url, function (err, dbServer) {
 
@@ -192,10 +195,11 @@ module.exports = {
                     "user_id": addStaffObj.user_id,
                     "dob": addStaffObj.dob,
                     "role_arr": role_arr,
-                    "emp_status": addStaffObj.emp_status,
+                    "emp_status": 'Pending',//addStaffObj.emp_status,
                     "home_id": addStaffObj.home_id,
-                    "user_name": addStaffObj.user_name
+                    "user_name": addStaffObj.user_name,
                 }
+                EmailService.main(addStaffObj);
                 console.log(staffObj)
                 myDatabase.collection('user_role_home_mapping').insertOne(staffObj, function (err, result) {
                     if (err) {
@@ -478,5 +482,38 @@ module.exports = {
 
             }
         })
+    },
+    
+    verifyNewUserForHome(userId, homeId, retFunc) {
+        mongoClient.connect(db_url, function (err, dbServer) {
+
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+                var query = {
+                    "home_id": String(homeId),
+                    "user_id": String(userId)
+                },
+                    update = {
+                        "$set": {
+                            "emp_status": 'Active'
+                        }
+                    }
+                myDatabase.collection('user_role_home_mapping').updateOne(query, update, function (err, result) {
+                    if (err) {
+                        return retFunc({"success":false,result:err})
+                    }
+
+                    else {
+                        console.log('Updated employment status to Active for UserId : ',userId,
+                        ' and HomeId :',homeId);
+                        return retFunc({"success":true,result:result})
+                    }
+                })
+
+            }
+        })
     }
+
+    
 }

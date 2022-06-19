@@ -96,7 +96,7 @@ module.exports.getUserCompletedCourses = async function (homeId, roleId, userId,
         if (err) throw err;
         else {
             var myDatabase = dbServer.db(db_name);
-            console.log(userId," ",roleId," ",homeId);
+            //console.log(userId," ",roleId," ",homeId);
             myDatabase.collection('user_crs_mapping').find({'user_id': String(userId)}).toArray(function (err, inner) {
                 if (err) {
                     retFunc(1);
