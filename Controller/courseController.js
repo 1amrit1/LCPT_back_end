@@ -71,18 +71,19 @@ module.exports.updateCourseFn = async function (req, res) {
                     allCourseJson.push(result);
                     console.log("=========== Going to fetch User completed courses ======= ");
                     courseModel.getUserCompletedCourses(homeId, roleId, userId, function (result) {
-                        if (result.length==0) {
-                            return res.status(400).send('No data Found!')
-                        }
-                        else{
+                        if (result.length != 0) {
+                            //return res.status(400).send('No data Found!')
                             userCourseJson.push(result);
+                        }
+                        
+                            
                             console.log("=========== Going to fetch All courses ======= ");
                             courseModel.getAllCourses(function (result) {
                                 if (result.length==0) {
                                     return res.status(400).send('No data Found!')
                                 }else{
                                     allCourseList.push(result);
-                                    if(userCourseJson === [] && allCourseJson === []){
+                                    if(allCourseJson === []){
                                         res.status(400).send(responseJson);
                                     }else{
                                           console.log("======= Performing manipulation =========== ");
@@ -161,7 +162,7 @@ module.exports.updateCourseFn = async function (req, res) {
 
 
                             
-                        };
+                     //   };
                     });
                     return new Promise(resolve => {
                         console.log("one");

@@ -1,4 +1,5 @@
 var User = require('../Model/userModelSchema');
+var loginService = require('../Model/loginModel');
 
 exports.getAllUsers = async function (query) {
     try {
@@ -57,7 +58,18 @@ exports.saveUser = async function (user) {
             console.log('Generating new user ID in sequence');
         }
         newUser.type = 'employee';
+
+        const loginData = {
+            "type_id":"3",
+            "type":"user",
+            "login_id": newUser.userName,
+            "password": newUser.password,
+            "home_id": "",
+            "org_id": "",
+            "user_id": String(id)
+        }
         let saveUser = await newUser.save();
+        loginService.insert_1_login(loginData);
         return saveUser;
     } catch (e) {
         console.log('Error while saving user.')
@@ -69,6 +81,7 @@ exports.updateUser = async function (id, user) {
  try {
     const userObj = {
         fullName: user.fullName,
+        userName: user.userName,
         password: user.password,
         dob: user.dob,
         email: user.email,
