@@ -1,6 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const db_name = "LCPT";
-const url = "mongodb+srv://hanishdb:Hanish8013@cluster0.381hf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+//const url = "mongodb+srv://hanishdb:Hanish8013@cluster0.381hf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const url = require('../Url-config').MONGO_URL;
 const client = new MongoClient(url);
 
 

@@ -28,8 +28,8 @@ module.exports = {
     secure: true, // true for 465, false for other ports
     //service:'gmail',
     auth: {
-      user: 'ayushsingh9200@gmail.com', // generated ethereal user
-      pass: '', //  generated ethereal password
+      user: 'sergevasco10@gmail.com', // generated ethereal user
+      pass: 'hxqwghfjttjjxexg', //  generated ethereal password
     },
     tls:{
       rejectUnauthorized:false
@@ -38,8 +38,8 @@ module.exports = {
 
   // send mail with defined transport object
   let info = transporter.sendMail({
-    from: 'ayushsingh9200@gmail.com', // sender address
-    to: "ayushtech11@gmail.com", // list of receivers
+    from: 'sergevasco10@gmail.com', // sender address
+    to: "ayushsingh9200@gmail.com", // list of receivers
     subject: "LCPT Webportal | Confirm Details ✔", // Subject line
     text: "Hello world?", // plain text body
     html: output, // html body

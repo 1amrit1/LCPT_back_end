@@ -8,10 +8,13 @@ const userRouter = require('./Routes/userRouter');
 const auditReportRouter = require('./Routes/auditReportRouter');
 const adminDataRouter = require('./Routes/adminDataRouter');
 const loginRouter = require('./Routes/loginRouter')
+const clientUrl = require('./Url-config').CLIENT_URL;
+const mongoUrl = require('./Url-config').MONGOOSE_MONGO_URL;
+
 
 var mongoose = require('mongoose');
 const PORT = process.env.PORT || 5000;
-mongoose.connect('mongodb+srv://hanishdb:Hanish8013@cluster0.381hf.mongodb.net/LCPT?retryWrites=true&w=majority');
+mongoose.connect(mongoUrl);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback() {
@@ -29,8 +32,7 @@ app.use(bodyParser.urlencoded({
 
 //cross origin (cors)
 const corsOptions = {
-    //origin: 'https://lcpt-webportal.herokuapp.com/',
-    origin: 'http://localhost:3000',
+    origin: clientUrl,
     credentials: true,            //access-control-allow-credentials:true
     optionSuccessStatus: 200
 }
