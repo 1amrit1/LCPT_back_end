@@ -1,6 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const db_name = "LCPT";
-const url = "mongodb+srv://hanishdb:Hanish8013@cluster0.381hf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+//const url = "mongodb+srv://hanishdb:Hanish8013@cluster0.381hf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const url = require('../Url-config').MONGO_URL;
 const client = new MongoClient(url);
 
 
@@ -96,7 +97,7 @@ module.exports.getUserCompletedCourses = async function (homeId, roleId, userId,
         if (err) throw err;
         else {
             var myDatabase = dbServer.db(db_name);
-            //console.log(userId," ",roleId," ",homeId);
+            console.log(userId," ",roleId," ",homeId);
             myDatabase.collection('user_crs_mapping').find({'user_id': String(userId)}).toArray(function (err, inner) {
                 if (err) {
                     retFunc(1);
