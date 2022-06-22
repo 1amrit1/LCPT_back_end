@@ -23,3 +23,20 @@ module.exports.getAdmUsrCrsData = async function () {
     return res;
 
 }
+
+module.exports.editUserCrsStatus = async function (userID, crsID, date, status) {
+    var res = [];
+    // console.l
+    try {
+
+        await client.connect();
+        res = await client.db(db_name).collection("user_crs_mapping").updateOne({ 'user_id': userID, 'course_id': crsID }, { $set: { 'validity_date': date, 'status': status } });
+        console.log(res);
+        client.close();
+    }
+    catch (err) {
+        console.log(err);
+    }
+    return res;
+
+}
