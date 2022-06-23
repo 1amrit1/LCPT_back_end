@@ -29,6 +29,7 @@ module.exports.editUserCrsStatus = async function (userID, crsID, date, status) 
     var res = [];
     // console.l
     try {
+        date = new Date(date);
 
         await client.connect();
         res = await client.db(db_name).collection("user_crs_mapping").updateOne({ 'user_id': userID, 'course_id': crsID }, { $set: { 'validity_date': date, 'status': status } });
