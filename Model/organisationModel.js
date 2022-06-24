@@ -11,14 +11,49 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
-                console.log(id)
+              //  console.log(id)
                 myDatabase.collection('home').find({ 'org_id': id }).toArray(function (err, result) {
                     if (err) {
                         return retFunc({"success":false,result:err})
                     }
                     else {
-                        console.log("===Home list === ", result);
+                  //      console.log("===Home list === ", result);
                         return retFunc({"success":true,result:result})
+                    }
+                })
+            }
+        })
+    },
+    getAllHomesCount(retFunc) {
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+               
+                myDatabase.collection('home').find().toArray(function (err, result) {
+                    if (err) {
+                        return retFunc({"success":false,result:err})
+                    }
+                    else {
+                        //console.log("===Home list === ", result);
+                        return retFunc({"success":true,result:result.length})
+                    }
+                })
+            }
+        })
+    },
+    getRoleLength(retFunc) {
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+               
+                myDatabase.collection('home_crs_role').find().toArray(function (err, result) {
+                    if (err) {
+                        return retFunc({"success":false,result:err})
+                    }
+                    else {
+                        return retFunc({"success":true,result:result.length})
                     }
                 })
             }
@@ -29,13 +64,13 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
-                console.log(id)
+              //  console.log(id)
                 myDatabase.collection('organisation').find().toArray(function (err, result) {
                     if (err) {
                         return retFunc({"success":false,result:err})
                     }
                     else {
-                        console.log("===Home list === ", result);
+                   //     console.log("===Home list === ", result);
                         return retFunc({"success":true,result:result})
                     }
                 })
@@ -62,7 +97,7 @@ module.exports = {
     }
     ,
     editTrainingStandards(trainingObj, retFunc) {
-        console.log("from delete", trainingObj)
+    //    console.log("from delete", trainingObj)
         mongoClient.connect(db_url, function (err, dbServer) {
             if (err) throw err;
             else {
@@ -82,7 +117,41 @@ module.exports = {
                     }
 
                     else {
-                        return retFunc({"success":true,result:result})
+                        myDatabase.collection('home').find({ 'org_id': id }).toArray(function (homeErr, homeResult) {
+                            if (err) {
+                                return retFunc({"success":false,result:homeErr})
+                            }
+                            else {  
+                                var homeTrainArray = []
+                                for(var i = 0;i<homeResult.length;i++){
+                                    homeTrainObj = {
+                                        "home_id":homeResult[i].home_id,
+                                        "role_id":trainingObj.trainStandards.role_id,
+                                        "role_details":trainingObj.trainStandards.role_details,
+                                        "role_name":trainingObj.trainStandards.role_name,
+                                        "course_details":[],
+                                        "archived":"False",
+
+                                    }
+                                    homeTrainArray.push(homeTrainObj)
+                                }
+                                console.log("training array",homeTrainArray)
+                                myDatabase.collection('home_crs_role').insertMany(homeTrainArray, function (newErr, newResult) {
+                                    if (err) {
+                                        return  retFunc({"success":false,result:newErr})
+                                    }
+                
+                                    else {
+                                        return retFunc({"success":true,result:result})
+                                    }
+                                })
+
+                            }
+                        })
+                    
+
+                      
+                       // return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -119,23 +188,26 @@ module.exports = {
             }
         })
     },
-
-    addNewStandard(newStandardObj, retFunc) {
+    editHomeDetails(homeDetailObj, retFunc) {
         mongoClient.connect(db_url, function (err, dbServer) {
-
             if (err) throw err;
             else {
+               // console.log(homeDetailObj.homeDetails)
                 var myDatabase = dbServer.db(db_name);
                 var query = {
-                    "org_id": newStandardObj.id
+                    "org_id": homeDetailObj.org_id,
+                    "home_id": homeDetailObj.home_id
                 },
                     update = {
                         "$set": {
-                            "train_standards": newStandardObj.trainStandards
+                            "name": homeDetailObj.name,
+                            "contact_firstName": homeDetailObj.contact_firstName,
+                            "contact_lastName": homeDetailObj.contact_lastName,
+                            "phone_no": homeDetailObj.phone_no,
+                            "email_id": homeDetailObj.email_id
                         }
                     }
-                //console.log(trainingObj)
-                myDatabase.collection('organisation').updateOne(query, update, function (err, result) {
+                myDatabase.collection('home').updateOne(query, update, function (err, result) {
                     if (err) {
                         return retFunc({"success":false,result:err})
                     }
@@ -148,6 +220,102 @@ module.exports = {
             }
         })
     },
+
+    // addNewStandard(newStandardObj, retFunc) {
+    //     mongoClient.connect(db_url, function (err, dbServer) {
+    //         console.log("THis is new standardObj",newStandardObj)
+
+    //         if (err) throw err;
+    //         else {
+    //             var myDatabase = dbServer.db(db_name);
+    //             var query = {
+    //                 "org_id": newStandardObj.id
+    //             },
+    //                 update = {
+    //                     "$set": {
+    //                         "train_standards": newStandardObj.trainStandards
+    //                     }
+    //                 }
+    //             //console.log(trainingObj)
+    //             myDatabase.collection('organisation').updateOne(query, update, function (err, result) {
+    //                 if (err) {
+    //                     return retFunc({"success":false,result:err})
+    //                 }
+
+    //                 else {
+    //                     return retFunc({"success":true,result:result})
+    //                 }
+    //             })
+
+    //         }
+    //     })
+    // },
+    addNewStandard(trainingObj, retFunc) {
+        //    console.log("from delete", trainingObj)
+            mongoClient.connect(db_url, function (err, dbServer) {
+                if (err) throw err;
+                else {
+                    var myDatabase = dbServer.db(db_name);
+    
+                    var query = {
+                        "org_id": trainingObj.id
+                    },
+                        update = {
+                            "$set": {
+                                "train_standards": trainingObj.trainStandards
+                            }
+                        }
+                    myDatabase.collection('organisation').updateOne(query, update, function (err, result) {
+                        if (err) {
+                            return  retFunc({"success":false,result:err})
+                        }
+    
+                        else {
+                            myDatabase.collection('home').find({ 'org_id': trainingObj.id }).toArray(function (homeErr, homeResult) {
+                                if (homeErr) {
+                                    return retFunc({"success":false,result:homeErr})
+                                }
+                                else {  
+                                    console.log("Hi there")
+                                    var homeTrainArray = []
+                                    for(var i = 0;i<homeResult.length;i++){
+                                    //     for(var j=0;j<trainingObj.trainStandards.length;j++){
+                                        homeTrainObj = {
+                                            "home_id":homeResult[i].home_id,
+                                            "role_id":trainingObj.newStandard.role_id,
+                                            "role_details":trainingObj.newStandard.role_details,
+                                            "role_name":trainingObj.newStandard.role_name,
+                                            "course_details":[],
+                                            "archived":"False",
+    
+                                        }
+                                        homeTrainArray.push(homeTrainObj)
+                                    // }
+                                    
+                                }
+                                    //console.log("training array",homeTrainArray)
+                                    myDatabase.collection('home_crs_role').insertMany(homeTrainArray, function (newErr, newResult) {
+                                        if (err) {
+                                            return  retFunc({"success":false,result:newErr})
+                                        }
+                    
+                                        else {
+                                            return retFunc({"success":true,result:result})
+                                        }
+                                    })
+    
+                                }
+                            })
+                        
+    
+                          
+                           // return retFunc({"success":true,result:result})
+                        }
+                    })
+    
+                }
+            })
+        },
     getStaffList(id, retFunc) {
         mongoClient.connect(db_url, function (err, dbServer) {
             if (err) throw err;
@@ -217,7 +385,7 @@ module.exports = {
     },
     editStaffStatus(newStaffStatus, retFunc) {
         mongoClient.connect(db_url, function (err, dbServer) {
-            console.log(newStaffStatus)
+           // console.log(newStaffStatus)
 
             if (err) throw err;
             else {
@@ -387,7 +555,7 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
-                console.log("role obj", roleObj)
+              //  console.log("role obj", roleObj)
                 var query = { "role_id": String(roleObj.role_id), "home_id": String(roleObj.home_id) }
                 update = {
                     "$set": {

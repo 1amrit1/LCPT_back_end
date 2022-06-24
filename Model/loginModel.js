@@ -26,16 +26,24 @@ module.exports.get_1_login = async function (login_id, password) {
     try {
 
         // await client.connect();
-        res = await client.db(db_name).collection("login").findOne({ "login_id": login_id, "password": password });
-        console.log(login_id,password);
-        if(!res){
+        //console.log(login_id,password)
+        res = await client.db(db_name).collection("login").find({ "login_id": login_id, "password": password }).toArray();
+        
+        if(!res  || res.length==0){
             return 'No User Found!'
+        }
+        else {
+            newRes = await client.db(db_name).collection("users").find({ "user_id": parseInt(res[0].user_id) }).toArray();
+           // console.log("newres",newRes)
+            if(!newRes  || newRes.length==0){
+                return 'No User Found!'
+            }
         }
         // client.close();
     }
     catch (err) {
         console.log(err);
     }
-    return res;
+    return {res,newRes};
 
 }

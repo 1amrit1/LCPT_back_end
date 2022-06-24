@@ -92,7 +92,7 @@ var homesComplaintSummary = async (homeID) => {
 
 module.exports.sendOganizationSummary = async (req, res) => {
     var org_id = req.params.org_id;
-    console.log("org summ ")
+    //console.log("org summ ")
     console.log(org_id)
     var homeList = [];
     organizationModel.getHomesList(org_id, async function (result) {
@@ -244,8 +244,8 @@ module.exports.getOrganizationStaffTemplates = async (req, res) => {
                 console.log("userCrsArr")
                 resObjArr = resObjArr.concat(userCrsArr)
             }
-            console.log("res obh arr  in getOrganizationStaffTemplates function--------------------------")
-            console.log(resObjArr);
+            // console.log("res obh arr  in getOrganizationStaffTemplates function--------------------------")
+            // console.log(resObjArr);
             res.send(resObjArr);
         }
 

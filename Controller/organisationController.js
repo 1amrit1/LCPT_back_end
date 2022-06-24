@@ -20,7 +20,7 @@ module.exports.getHomeList =  function (req, res) {
             res.status(400).send('Something went wrong!')
         }
         else if (resultObj.success && resultObj.result.length == 0) {
-            res.status(400).send('No Home Found!')
+            res.status(200).send('No Home Found!')
         }
         else{
          //   console.log('response',result);
@@ -45,7 +45,34 @@ module.exports.getOrganisationDetails = function (req, res) {
 
     });
 }
-
+module.exports.getAllHomesCount = function (req, res) {
+ con.getAllHomesCount( function (resultObj) {
+    if (!resultObj.success) {
+        res.status(400).send('Something went wrong!')
+    }
+    // else if (resultObj.success && resultObj.result.length==0) {
+    //     res.status(200).send('No Organisation Found!')
+    // }
+    else{
+      //  console.log(resultObj.result)
+        res.status(200).send(String(resultObj.result));
+    }
+ })
+}
+module.exports.getRoleLength = function (req, res) {
+    con.getRoleLength( function (resultObj) {
+       if (!resultObj.success) {
+           res.status(400).send('Something went wrong!')
+       }
+       // else if (resultObj.success && resultObj.result.length==0) {
+       //     res.status(200).send('No Organisation Found!')
+       // }
+       else{
+        //   console.log(resultObj.result)
+           res.status(200).send(String(resultObj.result));
+       }
+    })
+   };
 module.exports.editTrainingStandards = function (req, res) {
     var trainingObj = req.body
     con.editTrainingStandards(trainingObj, function (resultObj) {
@@ -121,7 +148,7 @@ module.exports.getHomeDetails = function (req, res) {
 }
 module.exports.editHomeDetails = function(req,res){
     var homeDetailObj = req.body
-    con.editOrgDetails(homeDetailObj,function(resultObj){
+    con.editHomeDetails(homeDetailObj.homeDetails,function(resultObj){
         if (!resultObj.success) {
             res.status(400).send('Something went wrong!')
         }
@@ -254,7 +281,7 @@ module.exports.getHomeRoleCourseJson = function (req, res) {
     var id = req.params.homeId;
     var roleId = req.params.roleId;
     var queryWithDetails = {'home_id': String(id), 'role_id': String(roleId)};
-   console.log(queryWithDetails)
+  // console.log(queryWithDetails)
    var arrayOfHomeCourses = [];
 //    var mapOfRoleCourse = new Map();
 //    var course  = new Map();
@@ -268,7 +295,7 @@ module.exports.getHomeRoleCourseJson = function (req, res) {
                 if (crsResult.length==0) {
                     return res.status(400).send('No data Found!')
                 }else{
-                   console.log(crsResult);
+                 //  console.log(crsResult);
                     crsResult.forEach(res => {
                         courseMap.set(String(res.courseID),res);
                     });
@@ -309,7 +336,7 @@ module.exports.getCourseList = function(req,res){
 }
 module.exports.addCheckListRole = function(req,res){
     var roleObj = req.body
-    console.log("In checkList Body",roleObj)
+   // console.log("In checkList Body",roleObj)
     con.addCheckListRole(roleObj, function (resultObj) {
         if (!resultObj.success) {
             res.status(400).send('Something went wrong!')
@@ -370,13 +397,13 @@ module.exports.getAllHomes = function (req, res) {
 /** Added by Ayush */
 module.exports.getRolesFromHomeId = function (req, res) {
     var id = req.params.id;
-    console.log("==== ID ==== ", id);
+   // console.log("==== ID ==== ", id);
     roleService.getAllRolesByHomeId(id, function (result) {
         if (result.length == 0) {
             res.status(400).send('No Role Found!')
         }
         else{
-            console.log("=== Result === ", result);
+      //      console.log("=== Result === ", result);
             res.status(200).send(result);
         }
 
