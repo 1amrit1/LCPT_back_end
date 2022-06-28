@@ -39,7 +39,7 @@ module.exports = {
   // send mail with defined transport object
   let info = transporter.sendMail({
     from: 'sergevasco10@gmail.com', // sender address
-    to: "ayushsingh9200@gmail.com", // list of receivers
+    to: "sandy.vascotto@lambtoncollege.ca, sergevasco10@gmail.com", // list of receivers
     subject: "LCPT Webportal | Confirm Details ✔", // Subject line
     text: "Hello world?", // plain text body
     html: output, // html body

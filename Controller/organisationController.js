@@ -281,7 +281,7 @@ module.exports.getHomeRoleCourseJson = function (req, res) {
     var id = req.params.homeId;
     var roleId = req.params.roleId;
     var queryWithDetails = {'home_id': String(id), 'role_id': String(roleId)};
-  // console.log(queryWithDetails)
+  // console.log("-0-0-0-0> ",queryWithDetails)
    var arrayOfHomeCourses = [];
 //    var mapOfRoleCourse = new Map();
 //    var course  = new Map();
@@ -299,7 +299,7 @@ module.exports.getHomeRoleCourseJson = function (req, res) {
                     crsResult.forEach(res => {
                         courseMap.set(String(res.courseID),res);
                     });
-                    result.forEach(res => {
+                    result.result.forEach(res => {
                        //mapOfRoleCourse = {};
                        // course  = {};
                         res.course_details.forEach(inner => {

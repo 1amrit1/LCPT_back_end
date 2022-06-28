@@ -42,5 +42,37 @@ module.exports = {
         } catch (e) {
             throw Error('Error while fetching User Role Home Mapping.')
         }
+    },
+
+    saveUserCourseBadgeUrl(userId, courseId, badgeUrl, retFunc) {
+        try {
+            const date = new Date();
+            const bdgDoc = {
+                "user_id": String(userId),
+                "course_id": String(courseId),
+                "badging_document_url": badgeUrl,
+                "status": false,
+                "validity_date": date
+            }
+            console.log("body ", bdgDoc);
+            mongoClient.connect(db_url, function (err, dbServer) {
+                if (err) throw err;
+                else {
+                    var myDatabase = dbServer.db(db_name);
+                    myDatabase.collection('user_crs_mapping').insertOne(bdgDoc, function (err, result) {
+                        if (err) {
+                            return retFunc({"success":false,result:err})
+                        }
+    
+                        else {
+                            return retFunc({"success":true,result:result})
+                        }
+                    })
+    
+                }
+            })
+        } catch (e) {
+            throw Error('Error while saving User course badge URL.')
+        }
     }
 }

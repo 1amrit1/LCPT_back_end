@@ -53,6 +53,52 @@ module.exports.updateCourseFn = async function (req, res) {
     
         });
     }
+    
+
+    module.exports.getAllAppliedCourses = function (req, res) {
+        var userId = req.params.userId;
+        var allCourseList = [];
+        var arrayOfAllAppliedCourses = [];
+        courseModel.getUserCompletedCourses("0", "0", userId, function (result) {
+               if (result.length == 0) {
+                    res.status(400).send('No Role Found!')
+                }else{
+                    courseModel.getAllCourses(function (resultObj) {
+                    if (resultObj.length==0) {
+                        return res.status(400).send('No data Found!')
+                    }else{
+                            allCourseList.push(resultObj);
+                                result.forEach(inner => {
+                                   // upper.forEach(inner => {
+                                        allCourseList.forEach(mid => {
+                                            mid.forEach(lowest => {
+                                                if(inner.course_id === lowest.courseID){
+                                                    var mapOfCoursesCompleted = {};
+                                                    mapOfCoursesCompleted['homeId'] = "";
+                                                    mapOfCoursesCompleted['roleId'] = "";
+                                                    mapOfCoursesCompleted['userId'] = userId;
+                                                    mapOfCoursesCompleted['valid'] = inner.validity_date;
+                                                    mapOfCoursesCompleted['crsId'] = lowest.courseID;
+                                                    mapOfCoursesCompleted['title'] = lowest.title;
+                                                    mapOfCoursesCompleted['trainDuration'] = lowest.training_duration;
+                                                    mapOfCoursesCompleted['validity'] = lowest.validity_duration;
+                                                    mapOfCoursesCompleted['extDoc'] = (lowest.badging_document_url === undefined) ? 'N/A' : lowest.badging_document_url;
+                                                    mapOfCoursesCompleted['sharedEmp'] = (lowest.shared_with_emp === undefined) ? 'No' : lowest.shared_with_emp;;
+                                                    mapOfCoursesCompleted['status'] = (inner.status === "true" || inner.status === true) ? 'Complete' : 'Pending';
+                                                    arrayOfAllAppliedCourses.push(mapOfCoursesCompleted);
+                                                }
+                                            });
+                                        });
+                                //    });
+                                
+                                });
+                            res.status(200).send(arrayOfAllAppliedCourses);
+                        }
+                    });
+                }
+        });
+    }
+
 
     module.exports.getUserBasedCourseDetails = async function (req, res) {
     var homeId = req.body.homeId;
@@ -94,28 +140,30 @@ module.exports.updateCourseFn = async function (req, res) {
                                           userCourseJson.forEach(upper => {
                                              //console.log('@#@#@# ',upper);
                                              upper.forEach(inner => {
-                                                console.log(inner.course_id);
+                                                //console.log(inner.course_id);
                                                 userCourseId = inner.course_id;
                                                 allCourseList.forEach(mid => {
                                                     mid.forEach(lowest => {
-                                                    if(userCourseId === lowest.courseID){
-                                                       // console.log('@#@#@# ',lowest);
-                                                        tempArrayOfCompltdCourseIds.push(userCourseId);
-                                                        var mapOfCoursesCompleted = {};
-                                                        mapOfCoursesCompleted['homeId'] = homeId;
-                                                        mapOfCoursesCompleted['roleId'] = roleId;
-                                                        mapOfCoursesCompleted['userId'] = userId;
-                                                        mapOfCoursesCompleted['valid'] = upper.validity_date;
-                                                        mapOfCoursesCompleted['crsId'] = lowest.courseID;
-                                                        mapOfCoursesCompleted['title'] = lowest.title;
-                                                        mapOfCoursesCompleted['trainDuration'] = lowest.training_duration;
-                                                        mapOfCoursesCompleted['validity'] = lowest.validity_duration;
-                                                        mapOfCoursesCompleted['extDoc'] = (lowest.badging_document_url === undefined) ? 'N/A' : lowest.badging_document_url;
-                                                        mapOfCoursesCompleted['sharedEmp'] = (lowest.shared_with_emp === undefined) ? 'No' : lowest.shared_with_emp;;
-                                                        mapOfCoursesCompleted['status'] = 'Complete';
-                                                        arrayOfCourseCompleted.push(mapOfCoursesCompleted);
-                                                    }
-                                                });
+                                                        if(inner.status === true || inner.status === "true"){
+                                                            if(userCourseId === lowest.courseID){
+                                                            // console.log('@#@#@# ',lowest);
+                                                                tempArrayOfCompltdCourseIds.push(userCourseId);
+                                                                var mapOfCoursesCompleted = {};
+                                                                mapOfCoursesCompleted['homeId'] = homeId;
+                                                                mapOfCoursesCompleted['roleId'] = roleId;
+                                                                mapOfCoursesCompleted['userId'] = userId;
+                                                                mapOfCoursesCompleted['valid'] = upper.validity_date;
+                                                                mapOfCoursesCompleted['crsId'] = lowest.courseID;
+                                                                mapOfCoursesCompleted['title'] = lowest.title;
+                                                                mapOfCoursesCompleted['trainDuration'] = lowest.training_duration;
+                                                                mapOfCoursesCompleted['validity'] = lowest.validity_duration;
+                                                                mapOfCoursesCompleted['extDoc'] = (lowest.badging_document_url === undefined) ? 'N/A' : lowest.badging_document_url;
+                                                                mapOfCoursesCompleted['sharedEmp'] = (lowest.shared_with_emp === undefined) ? 'No' : lowest.shared_with_emp;;
+                                                                mapOfCoursesCompleted['status'] = 'Complete';
+                                                                arrayOfCourseCompleted.push(mapOfCoursesCompleted);
+                                                            }
+                                                        }
+                                                    });
                                                 });
                                                 
                                             });
