@@ -9,7 +9,7 @@ module.exports = ({
     /** FOR LOCALHOST */
         //CLIENT_URL : 'http://localhost:3000',
     /** FOR SIT ENV */
-        CLIENT_URL : 'https://lcpt-webportal.herokuapp.com/',
+        CLIENT_URL : 'https://lcpt-webportal.herokuapp.com',
 
     /*** For Mongoose URL only in server.js */
         /*****  FOR LOCAL MACHINE - USE HANISH DATABASE */
