@@ -7,9 +7,9 @@ module.exports = ({
         //MONGO_URL : 'mongodb+srv://root:root@cluster0.kvvuifk.mongodb.net/?retryWrites=true&w=majority',
 
     /** FOR LOCALHOST */
-        //CLIENT_URL : 'http://localhost:3000',
+        CLIENT_URL : 'http://localhost:3000',
     /** FOR SIT ENV */
-        CLIENT_URL : 'https://lcpt-webportal.herokuapp.com/',
+        //CLIENT_URL : 'https://lcpt-webportal.herokuapp.com/',
 
     /*** For Mongoose URL only in server.js */
         /*****  FOR LOCAL MACHINE - USE HANISH DATABASE */

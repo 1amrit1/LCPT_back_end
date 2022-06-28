@@ -81,3 +81,18 @@ exports.fetchUserHomeRoleMapping = function (req, res) {
 
     });
 }
+
+exports.saveCourseBadgeUrl = function (req, res) {
+    var userId = req.body.userId;
+    var courseId = req.body.courseId;
+    var badgeUrl = req.body.badgeUrl;
+    console.log("=== Saving Badge Url for === ", userId, courseId, badgeUrl);
+    RoleService.saveUserCourseBadgeUrl(userId,courseId,badgeUrl, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }else{
+            res.status(200).send(resultObj.result)
+        }
+
+    });
+}
