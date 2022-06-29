@@ -60,6 +60,17 @@ module.exports.getOrganisationDetails = function (req, res) {
 
     });
 }
+module.exports.getOrgRoleList = function(req,res){
+    con.getOrgRoleList(req.params.id,function(resultObj){
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+      
+        else{
+            res.status(200).send(resultObj.result);
+        }
+    })
+}
 module.exports.getAllHomesCount = function (req, res) {
     con.getAllHomesCount(function (resultObj) {
         if (!resultObj.success) {
@@ -381,7 +392,22 @@ module.exports.editCourseDetails = function (req, res) {
 
     });
 }
-module.exports.addAssignRoleText = function (req, res) {
+module.exports.editOrgCourseDetails =  function(req,res){
+    var roleObj = req.body
+    con.editOrgCourseDetails(roleObj, function (resultObj) {
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        else if (resultObj.success && resultObj.result.length == 0) {
+            res.status(400).send('Something went wrong!')
+        }
+        else{
+            res.status(200).send(resultObj.result);
+        }
+
+    });
+}
+module.exports.addAssignRoleText = function(req,res){
     var roleObj = req.body
     con.addAssignRoleText(roleObj, function (resultObj) {
         if (!resultObj.success) {
@@ -425,9 +451,24 @@ module.exports.getRolesFromHomeId = function (req, res) {
 
     });
 }
-module.exports.addNewOrg = function (req, res) {
+
+module.exports.getOrgCount = function (req, res) {
+    con.getOrgCount( function (resultObj) {
+       if (!resultObj.success) {
+           res.status(400).send('Something went wrong!')
+       }
+       // else if (resultObj.success && resultObj.result.length==0) {
+       //     res.status(200).send('No Organisation Found!')
+       // }
+       else{
+         //  console.log(resultObj.result)
+           res.status(200).send(String(resultObj.result));
+       }
+    })
+   }
+module.exports.addNewOrg = function(req,res){
     var OrgObj = req.body
-    con.addNewOrg(OrgObj, function (result) {
+    con.addNewOrg(OrgObj, function (resultObj) {
         if (!resultObj.success) {
             res.status(400).send('Something went wrong!')
         }

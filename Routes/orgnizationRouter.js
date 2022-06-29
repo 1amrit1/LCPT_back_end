@@ -3,9 +3,9 @@ var con = require('./../Model/organisationModel')
 const express = require('express');
 var { getHomeList, getOrganisationDetails, editTrainingStandards, editOrgDetails, addNewStandard, getStaffList,
     getHomeDetails, editHomeDetails, editStaffStatus, addNewStaff, getRolesFromHomeId, getAllHomes, getHomeDetailsJson, getHomeRoleCourseJson,
-    showHomeCheckList, editRoleStatus, addNewRole, getRoleTemplateDetails, addNewHome, getCourseList, addCheckListRole, editCourseDetails,
-    verifyNewUserForHome, addAssignRoleText, addNewOrg, addAssignRoleText, addNewOrg,
-    getAllHomesCount, getRoleLength, getOrgList } = require('../Controller/organisationController');
+    showHomeCheckList, editRoleStatus, addNewRole, getRoleTemplateDetails, addNewHome, getCourseList, addCheckListRole, editCourseDetails, 
+    verifyNewUserForHome, addAssignRoleText ,addNewOrg, getOrgCount,addNewOrg, getOrgList,
+    getAllHomesCount, getRoleLength, getOrgRoleList, editOrgCourseDetails } = require('../Controller/organisationController');
 
 var organizationRouter = express.Router();
 
@@ -32,6 +32,8 @@ organizationRouter.post('/addNewStaff', addNewStaff);
 
 organizationRouter.get('/showHomeCheckList/:id', showHomeCheckList);
 
+organizationRouter.get('/getOrgRoleList/:id', getOrgRoleList);
+
 organizationRouter.put('/editRoleArchiveStatus', editRoleStatus);
 
 organizationRouter.post('/addNewPosition', addNewRole);
@@ -46,6 +48,8 @@ organizationRouter.get('/getRoleTemplateDetails/:homeId/:roleId', getRoleTemplat
 
 organizationRouter.post('/addNewHome', addNewHome);
 
+organizationRouter.get('/getOrgCount', getOrgCount);
+
 organizationRouter.post('/addNewOrg', addNewOrg);
 
 organizationRouter.get('/getAllHomesCount', getAllHomesCount);
@@ -55,6 +59,8 @@ organizationRouter.get('/getRoleLength', getRoleLength);
 organizationRouter.put('/addCheckListRole', addCheckListRole);
 
 organizationRouter.put('/editCourseDetails', editCourseDetails);
+
+organizationRouter.put('/editOrgCourseDetails', editOrgCourseDetails);
 
 organizationRouter.get('/getRoleByHomeId/:id', getRolesFromHomeId);
 
