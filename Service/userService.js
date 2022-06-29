@@ -80,7 +80,8 @@ exports.saveUser = async function (user) {
 exports.updateUser = async function (id, user) {
  try {
     const userObj = {
-        fullName: user.fullName,
+        firstName: user.firstName,
+        lastName: user.lastName,
         userName: user.userName,
         password: user.password,
         dob: user.dob,

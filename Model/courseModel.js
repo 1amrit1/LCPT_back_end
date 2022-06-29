@@ -88,6 +88,7 @@ module.exports.getUserCourseDetails = async function (homeId, roleId, userId, re
             })
         }
     })
+    MongoClient.close();
    // console.log("=======> Response == ", response);
     return retFunc;
 }
@@ -108,6 +109,7 @@ module.exports.getUserCompletedCourses = async function (homeId, roleId, userId,
             })
         }
     });
+    MongoClient.close();
     return retFunc;
 }
 
@@ -127,6 +129,7 @@ module.exports.getAllCourses = async function (retFunc) {
             })
         }
     });
+    MongoClient.close();
     return retFunc;
 }
 
