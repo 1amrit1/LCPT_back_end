@@ -102,7 +102,7 @@ module.exports.sendOganizationSummary = async (req, res) => {
         }
         else {
             //   console.log('response',result);
-            homeList = result;
+            homeList = result.result;
             var orgSummData = [];
             for (let i = 0; i < homeList.length; i++) {
                 var orgSumRow = [];
@@ -143,12 +143,13 @@ module.exports.getHomeSummary = async (req, res) => {
         var user_id = URHbyHome[i].user_id;
         var role_id = URHbyHome[i].role_arr[0].role_id;
         var home_id = URHbyHome[i].home_id;
+        var role_name = URHbyHome[i].role_arr[0].role_name;
 
 
         var isUserComplaint = await checkUserForComplaintFn(user_id, role_id, home_id);
         var rolePosInArr = isRoleAlreadyInArrFn(homeSummObjArr, role_id);
         if (rolePosInArr == -1) {
-            var homeSumObj = { 'home_id': home_id, 'role_id': role_id, 'total_staff': 0, 'complaint_staff': 0, 'non_complaint_staff': 0 };
+            var homeSumObj = { 'role_name': role_name, 'home_id': home_id, 'role_id': role_id, 'total_staff': 0, 'complaint_staff': 0, 'non_complaint_staff': 0 };
             if (!isUserComplaint) {
                 console.log("false")
                 homeSumObj.non_complaint_staff += 1;
@@ -189,9 +190,11 @@ module.exports.getHomeStaffSummData = async (req, res) => {
             var finalObj = {
                 'user_id': userId,
                 'role_id': roleArr[j].role_id,
+                'role_name': roleArr[j].role_name,
                 'home_id': homeId,
                 'status': URHbyHome[i].emp_status,
-                'is_complaint': isURHComplaint
+                'is_complaint': isURHComplaint,
+                'user_name': URHbyHome[i].user_name
 
             }
             finalObjArr.push(finalObj);
@@ -218,6 +221,7 @@ module.exports.getOrganizationStaffTemplates = async (req, res) => {
         else {
             var home_list = [];
             var user_list = [];
+            result = result.result;
 
             //   console.log('response',result);
             //from homes get users and from users get user course details
@@ -239,7 +243,13 @@ module.exports.getOrganizationStaffTemplates = async (req, res) => {
             }
             var resObjArr = [];
             for (let i = 0; i < user_list.length; i++) {
+                console.log("----------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>AUDIT")
+                console.log(user_list[i])
                 var userCrsArr = await auditReportModel.getUserCourseByUser(user_list[i]);
+                var userName = await auditReportModel.getUserByUserID(user_list[i]);
+                console.log(userName);
+                var crsName = await auditReportModel.getCourseByCrsID(userCrsArr);
+                console.log(crsName);
                 console.log(userCrsArr)
                 console.log("userCrsArr")
                 resObjArr = resObjArr.concat(userCrsArr)
@@ -258,7 +268,7 @@ module.exports.getOrganizationStaffTemplates = async (req, res) => {
 module.exports.getOrganizationDeficiencyData = async (req, res) => {
     var orgId = req.params.org_id
     organizationModel.getHomesList(orgId, async function (result) {
-        if (result.length == 0) {
+        if (result.result.length == 0) {
             res.status(400).send('No Home Found!')
             // res.send("error!")
         }
@@ -266,6 +276,7 @@ module.exports.getOrganizationDeficiencyData = async (req, res) => {
             var home_list = [];
             // var user_list = [];
             var resObjArr = [];
+            result = result.result;
 
             //   console.log('response',result);
             //from homes get users and from users get user course details
@@ -286,7 +297,9 @@ module.exports.getOrganizationDeficiencyData = async (req, res) => {
                         console.log(URHMissingCrs)
                         var resObj = {
                             "user_id": URHData[j].user_id,
+                            "user_name": URHData[j].user_name,
                             "role_id": roleArr[k].role_id,
+                            "role_name": roleArr[k].role_name,
                             "home_id": URHData[j].home_id,
                             "missing_courses": (await URHMissingCrs).toString()
                         }
