@@ -115,3 +115,39 @@ module.exports.getUserCourseByUser = async function (userID) {
     return res;
 
 }
+
+
+module.exports.getUserByUserID = async function (userID) {
+    var res = [];
+    // console.l
+    try {
+
+        // await client.connect();
+        res = await client.db(db_name).collection("users").findOne({ "user_id": userID });
+
+        console.log(res);
+        // client.close();
+    }
+    catch (err) {
+        console.log(err);
+    }
+    return res;
+
+}
+module.exports.getCourseByCrsID = async function (courseID) {
+    var res = [];
+    // console.l
+    try {
+
+        // await client.connect();
+        res = await client.db(db_name).collection("course").findOne({ "course_id": courseID });
+
+        console.log(res);
+        // client.close();
+    }
+    catch (err) {
+        console.log(err);
+    }
+    return res;
+
+}
