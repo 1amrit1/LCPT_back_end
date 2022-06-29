@@ -24,7 +24,9 @@ module.exports = {
                     }
                 })
             }
+            //mongoClient.close()
         })
+        //mongoClient.close()
     },
     getAllHomesCount(retFunc) {
         mongoClient.connect(db_url, function (err, dbServer) {
@@ -42,6 +44,26 @@ module.exports = {
                     }
                 })
             }
+            //mongoClient.close()
+        })
+    },
+    getOrgCount(retFunc) {
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+               
+                myDatabase.collection('organisation').find().toArray(function (err, result) {
+                    if (err) {
+                        return retFunc({"success":false,result:err})
+                    }
+                    else {
+                        //console.log("===Home list === ", result);
+                        return retFunc({"success":true,result:result.length})
+                    }
+                })
+            }
+            //mongoClient.close()
         })
     },
     getRoleLength(retFunc) {
@@ -59,6 +81,7 @@ module.exports = {
                     }
                 })
             }
+            //mongoClient.close()
         })
     },
     getOrganizationsList(retFunc) {
@@ -77,6 +100,7 @@ module.exports = {
                     }
                 })
             }
+            //mongoClient.close()
         })
     },
 
@@ -95,6 +119,7 @@ module.exports = {
                     }
                 })
             }
+            //mongoClient.close()
         })
     }
     ,
@@ -151,13 +176,11 @@ module.exports = {
                             }
                         })
 
-
-
-                        // return retFunc({"success":true,result:result})
                     }
                 })
 
             }
+            //mongoClient.close()
         })
     },
     editOrgDetails(orgDetailObj, retFunc) {
@@ -188,6 +211,7 @@ module.exports = {
                 })
 
             }
+            //mongoClient.close()
         })
     },
     editHomeDetails(homeDetailObj, retFunc) {
@@ -220,6 +244,7 @@ module.exports = {
                 })
 
             }
+            //mongoClient.close()
         })
     },
 
@@ -271,27 +296,26 @@ module.exports = {
                     if (err) {
                         return retFunc({ "success": false, result: err })
                     }
-
                     else {
-                        myDatabase.collection('home').find({ 'org_id': trainingObj.id }).toArray(function (homeErr, homeResult) {
-                            if (homeErr) {
-                                return retFunc({ "success": false, result: homeErr })
-                            }
-                            else {
-                                console.log("Hi there")
-                                var homeTrainArray = []
-                                for (var i = 0; i < homeResult.length; i++) {
+                            myDatabase.collection('home').find({ 'org_id': trainingObj.id }).toArray(function (homeErr, homeResult) {
+                                if (homeErr) {
+                                    return retFunc({"success":false,result:homeErr})
+                                }
+                                else {  
+                                    var homeTrainArray = []
+                                    for(var i = 0;i<homeResult.length;i++){
                                     //     for(var j=0;j<trainingObj.trainStandards.length;j++){
-                                    homeTrainObj = {
-                                        "home_id": homeResult[i].home_id,
-                                        "role_id": trainingObj.newStandard.role_id,
-                                        "role_details": trainingObj.newStandard.role_details,
-                                        "role_name": trainingObj.newStandard.role_name,
-                                        "course_details": [],
-                                        "archived": "False",
-
-                                    }
-                                    homeTrainArray.push(homeTrainObj)
+                                        homeTrainObj = {
+                                            "home_id":homeResult[i].home_id,
+                                            "role_id":trainingObj.newStandard.role_id,
+                                            "role_details":trainingObj.newStandard.role_details,
+                                            "role_name":trainingObj.newStandard.role_name,
+                                            "course_details":[],
+                                            "archived":"False",
+                                            "org_id":String(trainingObj.id)
+    
+                                        }
+                                        homeTrainArray.push(homeTrainObj)
                                     // }
 
                                 }
@@ -308,10 +332,6 @@ module.exports = {
 
                             }
                         })
-
-
-
-                        // return retFunc({"success":true,result:result})
                     }
                 })
 
@@ -332,6 +352,7 @@ module.exports = {
                     }
                 })
             }
+            //mongoClient.close()
         })
     },
     getHomeDetails(id, retFunc) {
@@ -349,6 +370,7 @@ module.exports = {
                     }
                 })
             }
+            //mongoClient.close()
         })
     },
 
@@ -383,6 +405,7 @@ module.exports = {
                 })
 
             }
+            //mongoClient.close()
         })
     },
     editStaffStatus(newStaffStatus, retFunc) {
@@ -409,6 +432,7 @@ module.exports = {
                 })
 
             }
+            //mongoClient.close()
         })
     },
     showHomeCheckList(id, retFunc) {
@@ -428,6 +452,7 @@ module.exports = {
                     }
                 })
             }
+            //mongoClient.close()
         })
     },
     editRoleStatus(editRoleObj, retFunc) {
@@ -435,13 +460,16 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
+                if(editRoleObj.org_id)
+                var query = { "role_id": String(editRoleObj.role_id), "org_id": String(editRoleObj.org_id) }
+                else
                 var query = { "role_id": String(editRoleObj.role_id), "home_id": String(editRoleObj.home_id) }
                 update = {
                     "$set": {
                         "archived": editRoleObj.archived
                     }
                 }
-                myDatabase.collection('home_crs_role').updateOne(query, update, function (err, result) {
+                myDatabase.collection('home_crs_role').updateMany(query, update, function (err, result) {
                     if (err) {
                         return retFunc({ "success": false, result: err })
                     }
@@ -452,6 +480,7 @@ module.exports = {
                 })
 
             }
+            //mongoClient.close()
         })
     },
     addNewRole(addRoleObj, retFunc) {
@@ -476,6 +505,7 @@ module.exports = {
                 })
 
             }
+            //mongoClient.close()
         })
     },
     getRoleTemplateDetails(idDetails, retFunc) {
@@ -494,6 +524,7 @@ module.exports = {
                     }
                 })
             }
+            //mongoClient.close()
         })
     },
 
@@ -514,6 +545,7 @@ module.exports = {
                 })
 
             }
+            //mongoClient.close()
         })
     },
     addNewHome(addHomeObj, retFunc) {
@@ -527,11 +559,59 @@ module.exports = {
                     }
 
                     else {
-                        return retFunc({ "success": true, result: result })
+
+                        myDatabase.collection('home_crs_role').find({ 'org_id': addHomeObj.org_id}).toArray(function (homeErr, homeResult) {
+                            if (homeErr) {
+                                return retFunc({"success":false,result:homeErr})
+                            }
+                            else {  
+                                var homeTrainArray = []
+                                var map = new Map()
+                                for(var i = 0;i<homeResult.length;i++){
+                                //     for(var j=0;j<trainingObj.trainStandards.length;j++){
+                                    homeTrainObj = {
+                                        "home_id":addHomeObj.home_id,
+                                        "role_id":homeResult[i].role_id,
+                                        "role_details":homeResult[i].role_details,
+                                        "role_name":homeResult[i].role_name,
+                                        "course_details":homeResult[i].course_details,
+                                        "archived":"False",
+                                        "org_id":String(addHomeObj.org_id)
+
+                                    }
+                                    if(map.get(homeResult[i].role_id)==undefined){
+                                        homeTrainArray.push(homeTrainObj)
+                                        map.set(homeResult[i].role_id,homeResult[i].role_name)
+
+                                    }
+                                // }
+                                
+                            }
+                                //console.log("training array",homeTrainArray)
+                                myDatabase.collection('home_crs_role').insertMany(homeTrainArray, function (newErr, newResult) {
+                                    if (err) {
+                                        return  retFunc({"success":false,result:newErr})
+                                    }
+                
+                                    else {
+                                        return retFunc({"success":true,result:result})
+                                    }
+                                })
+
+                            }
+                        })
+                    
+
+                      
+                       // return retFunc({"success":true,result:result})
+                   
+
+
                     }
                 })
 
             }
+            //mongoClient.close()
         })
     },
     addCheckListRole(roleObj, retFunc) {
@@ -550,6 +630,7 @@ module.exports = {
                 })
 
             }
+            //mongoClient.close()
         })
     },
     editCourseDetails(roleObj, retFunc) {
@@ -575,6 +656,33 @@ module.exports = {
                 })
 
             }
+            //mongoClient.close()
+        })
+    },
+    editOrgCourseDetails(roleObj, retFunc) {
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+              //  console.log("role obj", roleObj)
+                var query = { "role_id": String(roleObj.role_id), "org_id": String(roleObj.org_id) }
+                update = {
+                    "$set": {
+                        "course_details": roleObj.course_details
+                    }
+                }
+                myDatabase.collection('home_crs_role').updateMany(query, update, function (err, result) {
+                    if (err) {
+                        return retFunc({"success":false,result:err})
+                    }
+
+                    else {
+                        return retFunc({"success":true,result:result})
+                    }
+                })
+
+            }
+            //mongoClient.close()
         })
     },
     addAssignRoleText(roleObj, retFunc) {
@@ -599,6 +707,7 @@ module.exports = {
                 })
 
             }
+            //mongoClient.close()
         })
     },
     getAllHomesList(id, retFunc) {
@@ -616,6 +725,7 @@ module.exports = {
                     }
                 })
             }
+            //mongoClient.close()
         })
     },
 
@@ -634,6 +744,7 @@ module.exports = {
                     }
                 })
             }
+            //mongoClient.close()
         })
     },
     addNewOrg(OrgObj, retFunc) {
@@ -652,6 +763,34 @@ module.exports = {
                 })
 
             }
+            //mongoClient.close()
+        })
+    },
+    getOrgRoleList(id,retFunc){
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+                myDatabase.collection('home_crs_role').find({ "org_id": String(id)}).toArray(function (err, result) {
+                    if (err) {
+                        return retFunc({"success":false,result:err})
+                    }
+
+                    else {
+                        var map = new Map();
+                        var tempArr = [];
+                        for(var i=0;i<result.length;i++){
+                            if(map.get(result[i].role_id)==undefined){
+                                map.set((result[i].role_id),(result[i]).role_details)
+                                tempArr.push(result[i]);
+                            }
+                        }
+                        return retFunc({"success":true,result:tempArr})
+                    }
+                })
+
+            }
+            //mongoClient.close()
         })
     },
 
@@ -683,6 +822,7 @@ module.exports = {
                 })
 
             }
+            //mongoClient.close()
         })
     }
 
