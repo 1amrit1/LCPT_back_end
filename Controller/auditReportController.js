@@ -102,7 +102,7 @@ module.exports.sendOganizationSummary = async (req, res) => {
         }
         else {
             //   console.log('response',result);
-            homeList = result;
+            homeList = result.result;
             var orgSummData = [];
             for (let i = 0; i < homeList.length; i++) {
                 var orgSumRow = [];
@@ -218,6 +218,7 @@ module.exports.getOrganizationStaffTemplates = async (req, res) => {
         else {
             var home_list = [];
             var user_list = [];
+            result = result.result;
 
             //   console.log('response',result);
             //from homes get users and from users get user course details
@@ -258,7 +259,7 @@ module.exports.getOrganizationStaffTemplates = async (req, res) => {
 module.exports.getOrganizationDeficiencyData = async (req, res) => {
     var orgId = req.params.org_id
     organizationModel.getHomesList(orgId, async function (result) {
-        if (result.length == 0) {
+        if (result.result.length == 0) {
             res.status(400).send('No Home Found!')
             // res.send("error!")
         }
@@ -266,6 +267,7 @@ module.exports.getOrganizationDeficiencyData = async (req, res) => {
             var home_list = [];
             // var user_list = [];
             var resObjArr = [];
+            result = result.result;
 
             //   console.log('response',result);
             //from homes get users and from users get user course details

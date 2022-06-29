@@ -17,8 +17,10 @@ module.exports = {
                         return retFunc({ "success": false, result: err })
                     }
                     else {
+                        console.log("----------------------->>>> orgg model");
+                        console.log(result);
                         //      console.log("===Home list === ", result);
-                        return retFunc({ "success": true, result: result })
+                        return retFunc({ "success": true, "result": result })
                     }
                 })
             }
