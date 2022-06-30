@@ -1,5 +1,6 @@
 "use strict";
 const nodemailer = require("nodemailer");
+const serverUrl = require('../Url-config').SERVER_URL;
 
 // async..await is not allowed in global scope, must use a wrapper
 module.exports = {
@@ -18,7 +19,7 @@ module.exports = {
       <li>Roles: ${addStaffObj.role_name}</li>
     </ul>
     <h3>Please confirm your details by clicking on below URL</h3>
-    <p><a href="http://localhost:5000/orgnization/emailVerification/${addStaffObj.user_id}/${addStaffObj.home_id}">Confirm</a></p>
+    <p><a href= "${serverUrl}orgnization/emailVerification/${addStaffObj.user_id}/${addStaffObj.home_id}">Confirm</a></p>
   `;
 
   // create reusable transporter object using the default SMTP transport

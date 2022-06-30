@@ -17,4 +17,9 @@ module.exports = ({
         /******  FOR SIT ENV - USE BELOW DATABASE */
         MONGOOSE_MONGO_URL : 'mongodb+srv://root:root@cluster0.kvvuifk.mongodb.net/LCPT?retryWrites=true&w=majority',
 
+    /** FOR LOCALHOST */
+        //SERVER_URL : 'http://localhost:5000/',
+    /** FOR SIT ENV */
+        SERVER_URL : 'https://lcpt-webportal-backend.herokuapp.com/',
+
 });
