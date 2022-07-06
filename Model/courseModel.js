@@ -65,7 +65,12 @@ module.exports.update_1_course = async function (courseID, updateObj) {
     var res;
     console.log("in get all users");
     await client.connect();
-    res = await client.db(db_name).collection("course").updateOne({ "courseID": courseID }, updateObj);
+
+    var updObj = {
+        $set: { title: updateObj.title, description: updateObj.description, validity_duration: updateObj.validity_duration, training_duration: updateObj.training_duration }
+    }
+
+    res = await client.db(db_name).collection("course").updateOne({ "courseID": courseID }, updObj);
     console.log(res);
     client.close();
     return res;
@@ -73,22 +78,22 @@ module.exports.update_1_course = async function (courseID, updateObj) {
 }
 
 module.exports.getUserCourseDetails = async function (homeId, roleId, userId, retFunc) {
-   // var response = [];
+    // var response = [];
     MongoClient.connect(url, function (err, dbServer) {
         if (err) throw err;
         else {
             var myDatabase = dbServer.db(db_name);
-            myDatabase.collection('home_crs_role').find({ home_id: String(homeId), role_id: String(roleId)  }).toArray(function (err, result) {
+            myDatabase.collection('home_crs_role').find({ home_id: String(homeId), role_id: String(roleId) }).toArray(function (err, result) {
                 if (err) {
                     return retFunc(1);
-                }else{
+                } else {
                     console.log("======= Got result from getUserCourseDetails ======= ", result);
                     retFunc(result);
                 }
             })
         }
     })
-   // console.log("=======> Response == ", response);
+    // console.log("=======> Response == ", response);
     return retFunc;
 }
 
@@ -97,11 +102,11 @@ module.exports.getUserCompletedCourses = async function (homeId, roleId, userId,
         if (err) throw err;
         else {
             var myDatabase = dbServer.db(db_name);
-            console.log(userId," ",roleId," ",homeId);
-            myDatabase.collection('user_crs_mapping').find({'user_id': String(userId)}).toArray(function (err, inner) {
+            console.log(userId, " ", roleId, " ", homeId);
+            myDatabase.collection('user_crs_mapping').find({ 'user_id': String(userId) }).toArray(function (err, inner) {
                 if (err) {
                     retFunc(1);
-                }else{
+                } else {
                     console.log("======= Got result from getUserCompletedCourses ======= ", inner);
                     retFunc(inner);
                 }
@@ -120,7 +125,7 @@ module.exports.getAllCourses = async function (retFunc) {
             myDatabase.collection('course').find({}).toArray(function (err, inner) {
                 if (err) {
                     retFunc(1);
-                }else{
+                } else {
                     console.log("======= Got result from getAllCourses ======= ", inner.length);
                     retFunc(inner);
                 }

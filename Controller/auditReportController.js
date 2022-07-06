@@ -265,6 +265,40 @@ module.exports.getOrganizationStaffTemplates = async (req, res) => {
 }
 // getOrganizationStaffTemplates("1")
 
+
+module.exports.getHomeDeficiencyData = async (req, res) => {
+    var homeId = req.params.homeId;
+
+    var URHData = await auditReportModel.getURHMapByHomeID(homeId)
+
+    console.log("URHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+    console.log(URHData);
+    var resObjArr = [];
+    console.log("URHData")
+    for (let j = 0; j < URHData.length; j++) {
+        var roleArr = URHData[j].role_arr
+        for (let k = 0; k < roleArr.length; k++) {
+
+            var URHMissingCrs = await userMissingCourses(URHData[j].user_id, roleArr[k].role_id, URHData[j].home_id)
+            console.log(URHMissingCrs)
+            var resObj = {
+                "user_id": URHData[j].user_id,
+                "user_name": URHData[j].user_name,
+                "role_id": roleArr[k].role_id,
+                "role_name": roleArr[k].role_name,
+                "home_id": URHData[j].home_id,
+                "missing_courses": (URHMissingCrs).toString()
+            }
+            resObjArr.push(resObj);
+        }
+
+    }
+    res.send(resObjArr)
+
+}
+
+
+
 module.exports.getOrganizationDeficiencyData = async (req, res) => {
     var orgId = req.params.org_id
     organizationModel.getHomesList(orgId, async function (result) {
