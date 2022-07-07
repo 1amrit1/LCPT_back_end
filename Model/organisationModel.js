@@ -3,6 +3,10 @@ const mongoClient = require('mongodb').MongoClient;
 const db_url = require('../Url-config').MONGO_URL;
 const db_name = "LCPT";
 var EmailService = require('../Service/email');
+const client = new mongoClient(db_url);
+const server = require('./../server')
+//import {db} from './../server'
+var mydb = global.db
 
 module.exports = {
 
@@ -824,7 +828,93 @@ module.exports = {
             }
             //mongoClient.close()
         })
-    }
+    },
 
+    getStaffCourseRoleCheckList(userId,homeId,retFunc){
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+                myDatabase.collection('user_role_home_mapping').find({ "user_id": String(userId),"home_id":String(homeId)}).toArray(function (err, result) {
+                    if (err) {
+                        return retFunc({"success":false,result:err})
+                    }
+
+                    else {
+                        var roleArray = []
+                        var len;
+                        if(result[0] && result[0].role_arr)
+                        len = result[0].role_arr.length
+                        else
+                        len = 0
+                        for(var i=0;i<len;i++){
+                            roleArray.push(result[0].role_arr[i].role_id)
+                        }
+                       // console.log("roleArray",len)
+                        myDatabase.collection('home_crs_role').find({ "role_id": { $in: roleArray}, "home_id":homeId }).toArray(function (err, newresult) {
+                            if (err) {
+                                return retFunc({"success":false,result:err})
+                            }
+        
+                            else {
+                                myDatabase.collection('user_crs_mapping').find({ "user_id": String(userId)}).toArray(function (err, _result) {
+                                    if (err) {
+                                        return retFunc({"success":false,result:err})
+                                    }
+                    
+                                    else {
+                                       var map = new Map()
+                                       for(var i=0;i<_result.length;i++){
+                                        map.set(_result[i].course_id,"course")
+                                       }
+                                       for(var i=0;i<newresult.length;i++){
+                                           var flag = 0
+                                           for(var j=0;j<newresult[i].course_details.length;j++){
+                                               if(map.get(newresult[i].course_details[j].id)!=undefined){
+                                                newresult[i].course_details[j]['isComp'] = true
+                                               }
+                                               else{
+                                                newresult[i].course_details[j]['isComp'] = false    
+                                                flag=1
+                                               }
+                                           }
+                                           if(flag==0)
+                                           newresult[i]['course_status'] = "Completed";
+                                           else
+                                           newresult[i]['course_status'] = "Pending";
+                                       }
+                                       return retFunc({"success":true,result:newresult})
+                                       
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+
+            }
+            //mongoClient.close()
+        })
+    },
+    userCompletedCourses(userId,retFunc){
+
+    mongoClient.connect(db_url, function (err, dbServer) {
+        if (err) throw err;
+        else {
+            var myDatabase = dbServer.db(db_name);
+            myDatabase.collection('user_crs_mapping').find({ "user_id": String(userId)}).toArray(function (err, result) {
+                if (err) {
+                    return retFunc({"success":false,result:err})
+                }
+
+                else {
+                    return retFunc({"success":true,result:result})
+                }
+            })
+
+        }
+        //mongoClient.close()
+    })
+}
 
 }

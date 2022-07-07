@@ -16,6 +16,7 @@ var mongoose = require('mongoose');
 const PORT = process.env.PORT || 5000;
 mongoose.connect(mongoUrl);
 var db = mongoose.connection;
+
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback() {
     console.log("Connected to MongoDb");
@@ -53,4 +54,3 @@ app.use("/admin-data/", adminDataRouter)
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
   });
-  
