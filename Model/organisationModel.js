@@ -392,7 +392,7 @@ module.exports = {
                     "user_id": addStaffObj.user_id,
                     "dob": addStaffObj.dob,
                     "role_arr": role_arr,
-                    "emp_status": 'Pending',//addStaffObj.emp_status,
+                    "emp_status": 'Hold',//addStaffObj.emp_status,
                     "home_id": addStaffObj.home_id,
                     "user_name": addStaffObj.user_name,
                 }
