@@ -113,7 +113,7 @@ module.exports.getUserCompletedCourses = async function (homeId, roleId, userId,
             })
         }
     });
-    return retFunc;
+     return retFunc;
 }
 
 

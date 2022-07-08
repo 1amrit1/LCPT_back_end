@@ -145,23 +145,28 @@ module.exports.getUserBasedCourseDetails = async function (req, res) {
                                     allCourseList.forEach(mid => {
                                         mid.forEach(lowest => {
                                             if (inner.status === true || inner.status === "true") {
-                                                if (userCourseId === lowest.courseID) {
-                                                    // console.log('@#@#@# ',lowest);
-                                                    tempArrayOfCompltdCourseIds.push(userCourseId);
-                                                    var mapOfCoursesCompleted = {};
-                                                    mapOfCoursesCompleted['homeId'] = homeId;
-                                                    mapOfCoursesCompleted['roleId'] = roleId;
-                                                    mapOfCoursesCompleted['userId'] = userId;
-                                                    mapOfCoursesCompleted['valid'] = upper.validity_date;
-                                                    mapOfCoursesCompleted['crsId'] = lowest.courseID;
-                                                    mapOfCoursesCompleted['title'] = lowest.title;
-                                                    mapOfCoursesCompleted['trainDuration'] = lowest.training_duration;
-                                                    mapOfCoursesCompleted['validity'] = lowest.validity_duration;
-                                                    mapOfCoursesCompleted['extDoc'] = (lowest.badging_document_url === undefined) ? 'N/A' : lowest.badging_document_url;
-                                                    mapOfCoursesCompleted['sharedEmp'] = (lowest.shared_with_emp === undefined) ? 'No' : lowest.shared_with_emp;;
-                                                    mapOfCoursesCompleted['status'] = 'Complete';
-                                                    arrayOfCourseCompleted.push(mapOfCoursesCompleted);
-                                                }
+                                                allCourseJson.forEach(crsRequired => {
+                                                    crsRequired[0].course_details.forEach(courses => {
+                                                        if (userCourseId === lowest.courseID &&
+                                                            courses.id === lowest.courseID) {
+                                                            // console.log('@#@#@# ',lowest);
+                                                            tempArrayOfCompltdCourseIds.push(userCourseId);
+                                                            var mapOfCoursesCompleted = {};
+                                                            mapOfCoursesCompleted['homeId'] = homeId;
+                                                            mapOfCoursesCompleted['roleId'] = roleId;
+                                                            mapOfCoursesCompleted['userId'] = userId;
+                                                            mapOfCoursesCompleted['valid'] = upper.validity_date;
+                                                            mapOfCoursesCompleted['crsId'] = lowest.courseID;
+                                                            mapOfCoursesCompleted['title'] = lowest.title;
+                                                            mapOfCoursesCompleted['trainDuration'] = lowest.training_duration;
+                                                            mapOfCoursesCompleted['validity'] = lowest.validity_duration;
+                                                            mapOfCoursesCompleted['extDoc'] = (lowest.badging_document_url === undefined) ? 'N/A' : lowest.badging_document_url;
+                                                            mapOfCoursesCompleted['sharedEmp'] = (lowest.shared_with_emp === undefined) ? 'No' : lowest.shared_with_emp;;
+                                                            mapOfCoursesCompleted['status'] = 'Complete';
+                                                            arrayOfCourseCompleted.push(mapOfCoursesCompleted);
+                                                        }
+                                                    });   
+                                                });
                                             }
                                         });
                                     });
