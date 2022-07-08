@@ -503,3 +503,35 @@ module.exports.verifyNewUserForHome = function (req, res) {
     });
 }
 
+module.exports.getStaffCourseRoleCheckList = function(req,res) {
+    var userId = req.params.userId;
+    var homeId = req.params.homeId;
+    //console.log(userId,homeId)
+    con.getStaffCourseRoleCheckList(userId,homeId, function(resultObj){
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        if (resultObj.success && resultObj.result.length == 0) {
+            res.status(200).send(resultObj.result)
+        }
+        else {
+            res.status(200).send(resultObj.result);
+
+        }
+    })
+}
+module.exports.userCompletedCourses = function(req,res){
+    con.userCompletedCourses(req.params.userId, function(resultObj){
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        if (resultObj.success && resultObj.result.length == 0) {
+            res.status(200).send(resultObj.result)
+        }
+        else {
+            res.status(200).send(resultObj.result);
+
+        }
+    })
+}
+
