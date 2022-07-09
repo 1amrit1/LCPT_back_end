@@ -1,15 +1,15 @@
 const User = require('../Model/userModelSchema');
-var UserService = require('../Service/userService'); 
-var RoleService = require('../Service/roleService'); 
+var UserService = require('../Service/userService');
+var RoleService = require('../Service/roleService');
 
 exports.getAllUsers = async function (req, res, next) {
     // Validate request parameters, queries using express-validator
-    
+
     var page = req.params.page ? req.params.page : 1;
     var limit = req.params.limit ? req.params.limit : 10;
     try {
         var users = await UserService.getAllUsers({}, page, limit)
-        console.log("Success > "+users);
+        console.log("Success > " + users);
         return res.status(200).json({ status: 200, data: users, message: "Succesfully Users Retrieved" });
     } catch (e) {
         return res.status(400).json({ status: 400, message: e.message });
@@ -19,7 +19,7 @@ exports.getAllUsers = async function (req, res, next) {
 exports.getUserById = async function (req, res, next) {
     var userId = req.params.id;
     try {
-      
+
         //console.log("+++++++++++++ "+userId);
         //var queryWithId = {userId:userId};
         var users = await UserService.getUser(userId);
@@ -34,7 +34,7 @@ exports.validateUser = async function (req, res, next) {
     var Email = req.body.email;
     var Password = req.body.password;
     try {
-        var queryWithDetails = {email: Email, password: Password};
+        var queryWithDetails = { email: Email, password: Password };
         var users = await UserService.getUserValidated(queryWithDetails)
         //console.log("Success > "+users[0]);
         return res.status(200).json({ status: 200, data: users[0], message: "Succesfully retrieved user" });
@@ -74,7 +74,7 @@ exports.fetchUserHomeRoleMapping = function (req, res) {
         if (result.length == 0) {
             res.status(400).send('No User-Role-Home Mapping Found!')
         }
-        else{
+        else {
             console.log("=== User Role Home Mapping === \n", result);
             res.status(200).send(result);
         }
@@ -87,10 +87,10 @@ exports.saveCourseBadgeUrl = function (req, res) {
     var courseId = req.body.courseId;
     var badgeUrl = req.body.badgeUrl;
     console.log("=== Saving Badge Url for === ", userId, courseId, badgeUrl);
-    RoleService.saveUserCourseBadgeUrl(userId,courseId,badgeUrl, function (resultObj) {
+    RoleService.saveUserCourseBadgeUrl(userId, courseId, badgeUrl, function (resultObj) {
         if (!resultObj.success) {
             res.status(400).send('Something went wrong!')
-        }else{
+        } else {
             res.status(200).send(resultObj.result)
         }
 
