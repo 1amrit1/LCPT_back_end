@@ -424,10 +424,10 @@ module.exports = {
             if (err) throw err;
             else {
                 var myDatabase = dbServer.db(db_name);
-                var query = { "user_id": String(newStaffStatus.id) }
+                var query = { "user_id": String(newStaffStatus.user_id), "home_id":String(newStaffStatus.home_id) }
                 update = {
                     "$set": {
-                        "emp_status": newStaffStatus.emp_status
+                        "role_arr": newStaffStatus.role_arr
                     }
                 }
                 myDatabase.collection('user_role_home_mapping').updateOne(query, update, function (err, result) {
@@ -921,6 +921,46 @@ module.exports = {
         }
         //mongoClient.close()
     })
+},
+setArchiveStatus(statusObj,retFunc){
+    mongoClient.connect(db_url, function (err, dbServer) {
+        if (err) throw err;
+        else {
+            var myDatabase = dbServer.db(db_name);
+            myDatabase.collection('user_role_home_mapping').find({ "user_id": String(statusObj.user_id), "home_id": String(statusObj.home_id) }).toArray(function (err, result) {
+                if (err) {
+                    return retFunc({"success":false,result:err})
+                }
+
+                else {
+                    var newRoleArray = result[0].role_arr
+                    console.log(newRoleArray)
+                    newRoleArray[statusObj.id].emp_status = "Archived"
+                    var query = { "user_id": String(statusObj.user_id), "home_id": String(statusObj.home_id) }
+                    update = {
+                        "$set": {
+                            "role_arr": newRoleArray
+                        }
+                    }
+                    //console.log("hidjndj")
+                    myDatabase.collection('user_role_home_mapping').updateOne(query, update, function (err, newresult) {
+                        if (err) {
+                            return retFunc({ "success": false, result: err })
+                        }
+            
+                        else {
+                            console.log(newresult)
+                            return retFunc({ "success": true, result: newresult })
+                        }
+                    })                }
+            })
+            
+    
+        }
+        //mongoClient.close()
+    })
+    }
 }
 
-}
+
+

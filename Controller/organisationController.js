@@ -535,4 +535,19 @@ module.exports.userCompletedCourses = function(req,res){
         }
     })
 }
+module.exports.setArchiveStatus = function(req,res){
+    var statusObj = req.body
+    con.setArchiveStatus(statusObj,function(resultObj){
+        if (!resultObj.success) {
+            res.status(400).send('Something went wrong!')
+        }
+        if (resultObj.success && resultObj.result.length == 0) {
+            res.status(200).send(resultObj.result)
+        }
+        else {
+            res.status(200).send(resultObj.result);
+
+        }
+    })
+}
 

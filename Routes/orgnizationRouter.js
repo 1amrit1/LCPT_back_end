@@ -5,7 +5,7 @@ var { getHomeList, getOrganisationDetails, editTrainingStandards, editOrgDetails
     getHomeDetails, editHomeDetails, editStaffStatus, addNewStaff, getRolesFromHomeId, getAllHomes, getHomeDetailsJson, getHomeRoleCourseJson,
     showHomeCheckList, editRoleStatus, addNewRole, getRoleTemplateDetails, addNewHome, getCourseList, addCheckListRole, editCourseDetails, 
     verifyNewUserForHome, addAssignRoleText ,addNewOrg, getOrgCount,addNewOrg, getOrgList, userCompletedCourses,
-    getAllHomesCount, getRoleLength, getOrgRoleList, editOrgCourseDetails, getStaffCourseRoleCheckList } = require('../Controller/organisationController');
+    getAllHomesCount, getRoleLength, getOrgRoleList, editOrgCourseDetails, getStaffCourseRoleCheckList, setArchiveStatus } = require('../Controller/organisationController');
 
 var organizationRouter = express.Router();
 
@@ -75,5 +75,7 @@ organizationRouter.get('/emailVerification/:userId/:homeId/:roleId', verifyNewUs
 organizationRouter.get('/getStaffCourseRoleCheckList/:userId/:homeId', getStaffCourseRoleCheckList);
 
 organizationRouter.get('/userCompletedCourses/:userId',userCompletedCourses);
+
+organizationRouter.put('/setArchiveStatus', setArchiveStatus);
 
 module.exports = organizationRouter;
