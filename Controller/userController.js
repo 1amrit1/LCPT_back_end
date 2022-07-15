@@ -1,6 +1,7 @@
 const User = require('../Model/userModelSchema');
 var UserService = require('../Service/userService');
 var RoleService = require('../Service/roleService');
+var EmailService = require('../Service/email');
 
 exports.getAllUsers = async function (req, res, next) {
     // Validate request parameters, queries using express-validator
@@ -95,4 +96,22 @@ exports.saveCourseBadgeUrl = function (req, res) {
         }
 
     });
+}
+
+
+exports.sendAuditEmailToEmp = function (req, res) {
+    var userId = req.body.userId;
+    var empEmailId = req.body.emailId;
+    var staffObj = {
+        "user_id": userId,
+        "emailId": empEmailId,
+    }
+    console.log(req.file);
+    console.log("=== Send audit email to employer === ", userId, empEmailId);
+    try {
+        EmailService.sendAuditReport(staffObj,req.file);    
+    } catch (error) {
+        res.status(400).send('Something went wrong!');
+        console.log(error);
+    }
 }

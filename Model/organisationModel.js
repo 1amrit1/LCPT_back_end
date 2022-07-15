@@ -387,27 +387,32 @@ module.exports = {
                 var myDatabase = dbServer.db(db_name);
                 home_arr = [];
                 role_arr = []
-                role_arr.push({ "role_id": addStaffObj.role_id, "role_name": addStaffObj.role_name })
+                role_arr.push({ "role_id": addStaffObj.role_id, "role_name": addStaffObj.role_name , "emp_status": 'Hold'})
                 var staffObj = {
                     "user_id": addStaffObj.user_id,
                     "dob": addStaffObj.dob,
                     "role_arr": role_arr,
-                    "emp_status": 'Hold',//addStaffObj.emp_status,
+                   //addStaffObj.emp_status,
                     "home_id": addStaffObj.home_id,
                     "user_name": addStaffObj.user_name,
                 }
-                EmailService.main(addStaffObj);
-                console.log(staffObj)
-                myDatabase.collection('user_role_home_mapping').insertOne(staffObj, function (err, result) {
+                EmailService.sendMail(addStaffObj);
+                //console.log(staffObj)
+                var query = { "user_id": String(addStaffObj.user_id), "dob": addStaffObj.dob, "user_name": addStaffObj.user_name, "home_id": String(addStaffObj.home_id) }
+                update = {
+                    "$push": {
+                        "role_arr": { "role_id": addStaffObj.role_id, "role_name": addStaffObj.role_name , "emp_status": 'Hold'}
+                    }
+                }
+                const options = { upsert: true };
+                myDatabase.collection('user_role_home_mapping').updateOne(query, update, options, function (err, result) {
                     if (err) {
                         return retFunc({ "success": false, result: err })
-                    }
-
-                    else {
+                    }else {
+                       // console.log("success", result);
                         return retFunc({ "success": true, result: result })
                     }
                 })
-
             }
             //mongoClient.close()
         })
@@ -798,7 +803,7 @@ module.exports = {
         })
     },
 
-    verifyNewUserForHome(userId, homeId, retFunc) {
+    verifyNewUserForHome(userId, homeId, roleId, retFunc) {
         mongoClient.connect(db_url, function (err, dbServer) {
 
             if (err) throw err;
@@ -806,13 +811,14 @@ module.exports = {
                 var myDatabase = dbServer.db(db_name);
                 var query = {
                     "home_id": String(homeId),
-                    "user_id": String(userId)
+                    "user_id": String(userId),
+                    "role_arr.role_id": String(roleId),
                 },
-                    update = {
-                        "$set": {
-                            "emp_status": 'Active'
-                        }
+                update = {
+                    "$set":{
+                        'role_arr.$.emp_status': 'Active'
                     }
+                }
                 myDatabase.collection('user_role_home_mapping').updateOne(query, update, function (err, result) {
                     if (err) {
                         return retFunc({ "success": false, result: err })
@@ -820,7 +826,7 @@ module.exports = {
 
                     else {
                         console.log('Updated employment status to Active for UserId : ', userId,
-                            ' and HomeId :', homeId);
+                            ' and HomeId :', homeId, ' and RoleId : ',roleId);
                         return retFunc({ "success": true, result: result })
                     }
                 })
