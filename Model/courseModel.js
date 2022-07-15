@@ -107,7 +107,7 @@ module.exports.getUserCompletedCourses = async function (homeId, roleId, userId,
                 if (err) {
                     retFunc(1);
                 } else {
-                    console.log("======= Got result from getUserCompletedCourses ======= ", inner);
+                    //console.log("======= Got result from getUserCompletedCourses ======= ", inner);
                     retFunc(inner);
                 }
             })

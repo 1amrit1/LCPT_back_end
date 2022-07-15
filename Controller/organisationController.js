@@ -487,8 +487,9 @@ module.exports.addNewOrg = function(req,res){
 module.exports.verifyNewUserForHome = function (req, res) {
     var userId = req.params.userId;
     var homeId = req.params.homeId;
-    console.log(' Email confirmation > ', userId, homeId);
-    con.verifyNewUserForHome(userId, homeId, function (resultObj) {
+    var roleId = req.params.roleId;
+    console.log(' Email confirmation > ', userId, homeId, roleId);
+    con.verifyNewUserForHome(userId, homeId, roleId, function (resultObj) {
         if (!resultObj.success) {
             res.status(400).send('Something went wrong!')
         }

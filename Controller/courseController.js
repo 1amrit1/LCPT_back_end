@@ -100,6 +100,56 @@ module.exports.getAllAppliedCourses = function (req, res) {
 }
 
 
+module.exports.getAllCoursesUserBased = async function (req, res) {
+    var userId = req.params.userId;
+    var allCourseJson = [];
+    var userCourseList = [];
+    courseModel.getAllCourses(function (result) {
+        if (result.length == 0) {
+            return res.status(400).send('No data Found!')
+        } else {
+            allCourseJson = result;
+            courseModel.getUserCompletedCourses("", "", userId, function (result) {
+                if (result.length != 0) {
+                   var count = 0;
+                    allCourseJson.forEach(crs => {
+                        var mapOfCourses = {};
+                        count += 1;
+                        mapOfCourses['id'] = count;
+                        mapOfCourses['homeId'] = "";
+                        mapOfCourses['roleId'] = "";
+                        mapOfCourses['userId'] = userId;
+                        mapOfCourses['crsId'] = crs.courseID;
+                        mapOfCourses['title'] = crs.title;
+                        mapOfCourses['description'] = crs.description;
+                        mapOfCourses['trainDuration'] = crs.training_duration;
+                        mapOfCourses['validity'] = crs.validity_duration;
+                        mapOfCourses['valid'] = "";
+                        mapOfCourses['badgeUrl'] = "";
+                        mapOfCourses['applied'] = "No";
+                        mapOfCourses['status'] = "Pending"; 
+                        mapOfCourses['extDoc'] = 'N/A';
+                        mapOfCourses['sharedEmp'] = 'No';
+                        
+                        result.forEach(userCrs => {
+                            var userCourseId = userCrs.course_id;
+                            if(userCourseId === crs.courseID){
+                                mapOfCourses['valid'] = userCrs.validity_date;
+                                mapOfCourses['badgeUrl'] = userCrs.badging_document_url;
+                                mapOfCourses['applied'] = (userCrs.status === "false" || userCrs.status === false) ? 'Yes' : "Complete";
+                                mapOfCourses['status'] = (userCrs.status === "true" || userCrs.status === true) ? 'Complete' : "Pending"; 
+                            }
+                        });
+                        userCourseList.push(mapOfCourses);
+                    });
+                    res.status(200).send(userCourseList);
+                }
+            });
+        }
+    });
+    //res.status(400).send("No data found");
+}
+
 module.exports.getUserBasedCourseDetails = async function (req, res) {
     var homeId = req.body.homeId;
     var roleId = req.body.roleId;

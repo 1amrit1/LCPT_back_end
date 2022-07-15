@@ -70,7 +70,7 @@ organizationRouter.get('/getHomeInfo/:id', getHomeDetailsJson);
 
 organizationRouter.get('/getHRCInfo/:homeId/:roleId', getHomeRoleCourseJson);
 
-organizationRouter.get('/emailVerification/:userId/:homeId', verifyNewUserForHome);
+organizationRouter.get('/emailVerification/:userId/:homeId/:roleId', verifyNewUserForHome);
 
 organizationRouter.get('/getStaffCourseRoleCheckList/:userId/:homeId', getStaffCourseRoleCheckList);
 
