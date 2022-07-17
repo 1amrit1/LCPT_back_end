@@ -8,6 +8,7 @@ const userRouter = require('./Routes/userRouter');
 const auditReportRouter = require('./Routes/auditReportRouter');
 const adminDataRouter = require('./Routes/adminDataRouter');
 const loginRouter = require('./Routes/loginRouter')
+const permissionRouter = require('./Routes/permissionRouter')
 const clientUrl = require('./Url-config').CLIENT_URL;
 const mongoUrl = require('./Url-config').MONGOOSE_MONGO_URL;
 
@@ -48,9 +49,10 @@ app.use("/course/", courseRouter)
 app.use("/user/", userRouter)
 app.use("/audit-report/", auditReportRouter)
 app.use("/admin-data/", adminDataRouter)
+app.use("/permissions/", permissionRouter)
 
 
 //server
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
-  });
+});
