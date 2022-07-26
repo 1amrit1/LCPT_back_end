@@ -285,6 +285,20 @@ module.exports.addNewHome = function (req, res) {
 
     });
 }
+module.exports.getOrgAdminList = function(req,res){
+    var id = req.params
+    con.getOrgAdminList(id,function(resultObj){   
+    if (!resultObj.success) {
+        res.status(400).send('Something went wrong!')
+    }
+    if (resultObj.success && resultObj.result.length == 0) {
+        res.status(200).send('Something Went Wrong!')
+    }
+    else {
+        res.status(200).send(resultObj.result);
+    }
+})
+}
 
 /** Added by Ayush */
 module.exports.getHomeDetailsJson = function (req, res) {

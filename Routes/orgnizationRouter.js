@@ -5,7 +5,7 @@ var { getHomeList, getOrganisationDetails, editTrainingStandards, editOrgDetails
     getHomeDetails, editHomeDetails, editStaffStatus, addNewStaff, getRolesFromHomeId, getAllHomes, getHomeDetailsJson, getHomeRoleCourseJson,
     showHomeCheckList, editRoleStatus, addNewRole, getRoleTemplateDetails, addNewHome, getCourseList, addCheckListRole, editCourseDetails, 
     verifyNewUserForHome, addAssignRoleText ,addNewOrg, getOrgCount,addNewOrg, getOrgList, userCompletedCourses,
-    getAllHomesCount, getRoleLength, getOrgRoleList, editOrgCourseDetails, getStaffCourseRoleCheckList, setArchiveStatus } = require('../Controller/organisationController');
+    getAllHomesCount, getRoleLength, getOrgRoleList, editOrgCourseDetails, getStaffCourseRoleCheckList, setArchiveStatus, getOrgAdminList } = require('../Controller/organisationController');
 
 var organizationRouter = express.Router();
 
@@ -35,6 +35,8 @@ organizationRouter.get('/showHomeCheckList/:id', showHomeCheckList);
 organizationRouter.get('/getOrgRoleList/:id', getOrgRoleList);
 
 organizationRouter.put('/editRoleArchiveStatus', editRoleStatus);
+
+organizationRouter.get('/getOrgAdminList/:id',getOrgAdminList);
 
 organizationRouter.post('/addNewPosition', addNewRole);
 

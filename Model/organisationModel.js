@@ -32,6 +32,41 @@ module.exports = {
         })
         //mongoClient.close()
     },
+    getOrgAdminList(id,retFunc){
+        mongoClient.connect(db_url, function (err, dbServer) {
+            if (err) throw err;
+            else {
+                var myDatabase = dbServer.db(db_name);
+
+                myDatabase.collection('login').find({"org_id":String(id.id),"type":"organization"}).toArray(function (err, result) {
+                    if (err) {
+                        return retFunc({ "success": false, result: err })
+                    }
+                    else {
+                        if(result.length>0){
+                            myDatabase.collection('users').find({"user_id":parseInt(result[0].user_id)}).toArray(function (err, newResult) {
+                                if (err) {
+                                    return retFunc({ "success": false, result: err })
+                                }
+                                else {
+            
+                                    
+                                    return retFunc({ "success": true, result: newResult })
+                                }
+                            })
+                        }
+                        else{
+                            return retFunc({ "success": true, result: result })
+
+                        }
+                       
+                    }
+                })
+            }
+            //mongoClient.close()
+        })
+
+    },
     getAllHomesCount(retFunc) {
         mongoClient.connect(db_url, function (err, dbServer) {
             if (err) throw err;
